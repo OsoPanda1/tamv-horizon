@@ -2,95 +2,105 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
+/* TAMV ONLINE - Civilizatory Design System
+   Aztec-Futuristic Dark Theme with Neon Accents
 */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Base colors - Deep space background */
+    --background: 222 47% 4%;
+    --foreground: 210 40% 98%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    /* Card surfaces */
+    --card: 222 47% 7%;
+    --card-foreground: 210 40% 98%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    /* Popover */
+    --popover: 222 47% 6%;
+    --popover-foreground: 210 40% 98%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Primary - Golden Aztec */
+    --primary: 45 93% 47%;
+    --primary-foreground: 222 47% 4%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    /* Secondary - Deep Obsidian */
+    --secondary: 217 33% 12%;
+    --secondary-foreground: 210 40% 98%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    /* Muted */
+    --muted: 217 33% 15%;
+    --muted-foreground: 215 20% 55%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    /* Accent - Cyan Neon */
+    --accent: 186 100% 50%;
+    --accent-foreground: 222 47% 4%;
 
-    --destructive: 0 84.2% 60.2%;
+    /* Destructive */
+    --destructive: 0 84% 60%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    /* Border & Input */
+    --border: 217 33% 18%;
+    --input: 217 33% 15%;
+    --ring: 45 93% 47%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
 
-    --sidebar-background: 0 0% 98%;
+    /* Sidebar */
+    --sidebar-background: 222 47% 5%;
+    --sidebar-foreground: 210 40% 90%;
+    --sidebar-primary: 45 93% 47%;
+    --sidebar-primary-foreground: 222 47% 4%;
+    --sidebar-accent: 186 100% 50%;
+    --sidebar-accent-foreground: 222 47% 4%;
+    --sidebar-border: 217 33% 15%;
+    --sidebar-ring: 45 93% 47%;
 
-    --sidebar-foreground: 240 5.3% 26.1%;
+    /* TAMV Custom Tokens */
+    --tamv-gold: 45 93% 47%;
+    --tamv-gold-glow: 45 93% 60%;
+    --tamv-cyan: 186 100% 50%;
+    --tamv-cyan-glow: 186 100% 70%;
+    --tamv-purple: 270 70% 50%;
+    --tamv-emerald: 160 84% 39%;
+    --tamv-coral: 16 100% 66%;
 
-    --sidebar-primary: 240 5.9% 10%;
+    /* Gradients */
+    --gradient-gold: linear-gradient(135deg, hsl(45 93% 47%), hsl(35 93% 40%));
+    --gradient-cyan: linear-gradient(135deg, hsl(186 100% 50%), hsl(200 100% 40%));
+    --gradient-aztec: linear-gradient(180deg, hsl(222 47% 8%), hsl(222 47% 3%));
+    --gradient-ceremonial: linear-gradient(135deg, hsl(45 93% 47% / 0.2), hsl(186 100% 50% / 0.1));
 
-    --sidebar-primary-foreground: 0 0% 98%;
+    /* Shadows */
+    --shadow-gold: 0 0 30px hsl(45 93% 47% / 0.3);
+    --shadow-cyan: 0 0 30px hsl(186 100% 50% / 0.3);
+    --shadow-card: 0 4px 20px hsl(0 0% 0% / 0.4);
 
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    /* Animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
+    --background: 222 47% 4%;
     --foreground: 210 40% 98%;
-
-    --card: 222.2 84% 4.9%;
+    --card: 222 47% 7%;
     --card-foreground: 210 40% 98%;
-
-    --popover: 222.2 84% 4.9%;
+    --popover: 222 47% 6%;
     --popover-foreground: 210 40% 98%;
-
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-
-    --secondary: 217.2 32.6% 17.5%;
+    --primary: 45 93% 47%;
+    --primary-foreground: 222 47% 4%;
+    --secondary: 217 33% 12%;
     --secondary-foreground: 210 40% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 62.8% 30.6%;
+    --muted: 217 33% 15%;
+    --muted-foreground: 215 20% 55%;
+    --accent: 186 100% 50%;
+    --accent-foreground: 222 47% 4%;
+    --destructive: 0 84% 60%;
     --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --border: 217 33% 18%;
+    --input: 217 33% 15%;
+    --ring: 45 93% 47%;
   }
 }
 
@@ -100,6 +110,254 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Inter', system-ui, sans-serif;
   }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: hsl(var(--background));
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--muted));
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--muted-foreground));
+  }
+}
+
+@layer components {
+  /* TAMV Button Variants */
+  .btn-tamv-gold {
+    @apply bg-primary text-primary-foreground font-semibold;
+    background: var(--gradient-gold);
+    box-shadow: var(--shadow-gold);
+    transition: var(--transition-smooth);
+  }
+
+  .btn-tamv-gold:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 40px hsl(var(--tamv-gold) / 0.5);
+  }
+
+  .btn-tamv-cyan {
+    @apply font-semibold;
+    background: var(--gradient-cyan);
+    color: hsl(var(--background));
+    box-shadow: var(--shadow-cyan);
+    transition: var(--transition-smooth);
+  }
+
+  .btn-tamv-cyan:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 40px hsl(var(--tamv-cyan) / 0.5);
+  }
+
+  .btn-tamv-ghost {
+    @apply bg-transparent border border-border text-foreground;
+    transition: var(--transition-smooth);
+  }
+
+  .btn-tamv-ghost:hover {
+    @apply bg-muted border-primary;
+    box-shadow: 0 0 20px hsl(var(--tamv-gold) / 0.2);
+  }
+
+  /* TAMV Card Styles */
+  .card-tamv {
+    @apply bg-card border border-border rounded-lg;
+    background: linear-gradient(145deg, hsl(var(--card)), hsl(var(--background)));
+    box-shadow: var(--shadow-card);
+    transition: var(--transition-smooth);
+  }
+
+  .card-tamv:hover {
+    border-color: hsl(var(--tamv-gold) / 0.3);
+    box-shadow: 0 4px 30px hsl(var(--tamv-gold) / 0.1);
+  }
+
+  .card-tamv-featured {
+    @apply card-tamv;
+    border-color: hsl(var(--tamv-gold) / 0.5);
+    background: linear-gradient(145deg, hsl(var(--card)), hsl(var(--background))), var(--gradient-ceremonial);
+  }
+
+  /* Glow Effects */
+  .glow-gold {
+    box-shadow: var(--shadow-gold);
+  }
+
+  .glow-cyan {
+    box-shadow: var(--shadow-cyan);
+  }
+
+  .text-glow-gold {
+    text-shadow: 0 0 20px hsl(var(--tamv-gold) / 0.5);
+  }
+
+  .text-glow-cyan {
+    text-shadow: 0 0 20px hsl(var(--tamv-cyan) / 0.5);
+  }
+
+  /* Aztec Pattern Overlay */
+  .aztec-pattern {
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0L60 30L30 60L0 30L30 0z' fill='none' stroke='%23c9a227' stroke-opacity='0.05' stroke-width='1'/%3E%3C/svg%3E");
+  }
+
+  /* Neon Border */
+  .neon-border-gold {
+    position: relative;
+  }
+
+  .neon-border-gold::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: var(--gradient-gold);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0.5;
+  }
+
+  /* Sidebar Navigation */
+  .sidebar-nav-item {
+    @apply flex items-center gap-3 px-3 py-2.5 rounded-lg text-sidebar-foreground;
+    transition: var(--transition-smooth);
+  }
+
+  .sidebar-nav-item:hover {
+    @apply bg-sidebar-accent/10;
+  }
+
+  .sidebar-nav-item.active {
+    @apply bg-sidebar-accent/20 text-primary;
+  }
+
+  /* Status Indicators */
+  .status-online {
+    @apply w-2.5 h-2.5 rounded-full bg-emerald-500;
+    box-shadow: 0 0 10px hsl(160 84% 39% / 0.5);
+  }
+
+  .status-live {
+    @apply w-2.5 h-2.5 rounded-full bg-red-500;
+    box-shadow: 0 0 10px hsl(0 84% 60% / 0.5);
+    animation: pulse 2s infinite;
+  }
+}
+
+@layer utilities {
+  /* Animation Utilities */
+  .animate-glow-pulse {
+    animation: glow-pulse 2s ease-in-out infinite;
+  }
+
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+
+  .animate-ceremonial {
+    animation: ceremonial-entrance 1.5s ease-out;
+  }
+
+  .animate-fade-up {
+    animation: fade-up 0.5s ease-out;
+  }
+
+  .animate-slide-in-right {
+    animation: slide-in-right 0.3s ease-out;
+  }
+}
+
+/* Keyframes */
+@keyframes glow-pulse {
+  0%, 100% {
+    box-shadow: 0 0 20px hsl(var(--tamv-gold) / 0.3);
+  }
+  50% {
+    box-shadow: 0 0 40px hsl(var(--tamv-gold) / 0.6);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes ceremonial-entrance {
+  0% {
+    opacity: 0;
+    transform: scale(0.9);
+    filter: blur(10px);
+  }
+  50% {
+    filter: blur(0);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes fade-up {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-in-right {
+  0% {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Ceremonial Welcome Animation */
+@keyframes aztec-reveal {
+  0% {
+    opacity: 0;
+    clip-path: polygon(50% 50%, 50% 50%, 50% 50%, 50% 50%);
+  }
+  100% {
+    opacity: 1;
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  }
+}
+
+.animate-aztec-reveal {
+  animation: aztec-reveal 1s ease-out forwards;
 }
