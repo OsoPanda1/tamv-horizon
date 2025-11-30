@@ -4,6 +4,13 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
+import Auth from "./pages/Auth";
+import Conciertos from "./pages/Conciertos";
+import Subastas from "./pages/Subastas";
+import DreamSpaces from "./pages/DreamSpaces";
+import Grupos from "./pages/Grupos";
+import Canales from "./pages/Canales";
+import Mascotas from "./pages/Mascotas";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -17,14 +24,15 @@ const App = () => (
         <div className="dark">
           <Routes>
             <Route path="/" element={<Index />} />
+            <Route path="/auth" element={<Auth />} />
             <Route path="/explorar" element={<Index />} />
             <Route path="/puentes-oniricos" element={<Index />} />
-            <Route path="/conciertos" element={<Index />} />
-            <Route path="/dreamspaces" element={<Index />} />
-            <Route path="/subastas" element={<Index />} />
-            <Route path="/grupos" element={<Index />} />
-            <Route path="/canales" element={<Index />} />
-            <Route path="/mascotas" element={<Index />} />
+            <Route path="/conciertos" element={<Conciertos />} />
+            <Route path="/dreamspaces" element={<DreamSpaces />} />
+            <Route path="/subastas" element={<Subastas />} />
+            <Route path="/grupos" element={<Grupos />} />
+            <Route path="/canales" element={<Canales />} />
+            <Route path="/mascotas" element={<Mascotas />} />
             <Route path="/banco" element={<Index />} />
             <Route path="/retos" element={<Index />} />
             <Route path="/tutoriales" element={<Index />} />
