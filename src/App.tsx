@@ -11,6 +11,10 @@ import DreamSpaces from "./pages/DreamSpaces";
 import Grupos from "./pages/Grupos";
 import Canales from "./pages/Canales";
 import Mascotas from "./pages/Mascotas";
+import PuentesOniricos from "./pages/PuentesOniricos";
+import DevHub from "./pages/DevHub";
+import XRExperience from "./pages/XRExperience";
+import BancoTAMV from "./pages/BancoTAMV";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -21,28 +25,21 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <div className="dark">
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/auth" element={<Auth />} />
-            <Route path="/explorar" element={<Index />} />
-            <Route path="/puentes-oniricos" element={<Index />} />
-            <Route path="/conciertos" element={<Conciertos />} />
-            <Route path="/dreamspaces" element={<DreamSpaces />} />
-            <Route path="/subastas" element={<Subastas />} />
-            <Route path="/grupos" element={<Grupos />} />
-            <Route path="/canales" element={<Canales />} />
-            <Route path="/mascotas" element={<Mascotas />} />
-            <Route path="/banco" element={<Index />} />
-            <Route path="/retos" element={<Index />} />
-            <Route path="/tutoriales" element={<Index />} />
-            <Route path="/configuracion" element={<Index />} />
-            <Route path="/dao" element={<Index />} />
-            <Route path="/documentos" element={<Index />} />
-            <Route path="/protocolos" element={<Index />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </div>
+        <Routes>
+          <Route path="/" element={<Index />} />
+          <Route path="/auth" element={<Auth />} />
+          <Route path="/conciertos" element={<Conciertos />} />
+          <Route path="/subastas" element={<Subastas />} />
+          <Route path="/dreamspaces" element={<DreamSpaces />} />
+          <Route path="/grupos" element={<Grupos />} />
+          <Route path="/canales" element={<Canales />} />
+          <Route path="/mascotas" element={<Mascotas />} />
+          <Route path="/puentes-oniricos" element={<PuentesOniricos />} />
+          <Route path="/dev-hub" element={<DevHub />} />
+          <Route path="/xr" element={<XRExperience />} />
+          <Route path="/banco" element={<BancoTAMV />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
