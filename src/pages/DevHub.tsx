@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, Book, Code, FileText, Zap, Shield, Users, Database, Globe, ChevronRight, Search, ExternalLink, Lock } from "lucide-react";
+import { ArrowLeft, Book, Code, FileText, Zap, Shield, Users, Database, Globe, ChevronRight, Search, ExternalLink, Lock, TrendingUp } from "lucide-react";
+import FinancialDashboard from "@/components/visualizations/FinancialDashboard";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -295,6 +296,7 @@ export default function DevHubPage() {
                 <TabsTrigger value="docs">Documentación</TabsTrigger>
                 <TabsTrigger value="api">API Reference</TabsTrigger>
                 <TabsTrigger value="examples">Ejemplos</TabsTrigger>
+                <TabsTrigger value="financials">Proyecciones Financieras</TabsTrigger>
               </TabsList>
 
               {/* Documentation Tab */}
@@ -465,6 +467,28 @@ console.log(response.response);
                     </div>
                   </CardContent>
                 </Card>
+              </TabsContent>
+
+              {/* Financials Tab */}
+              <TabsContent value="financials" className="space-y-6">
+                <Card className="bg-gradient-to-r from-primary/10 via-accent/5 to-primary/10 border-primary/20">
+                  <CardContent className="p-6">
+                    <div className="flex items-start gap-4">
+                      <div className="h-12 w-12 rounded-xl bg-primary/20 flex items-center justify-center">
+                        <TrendingUp className="h-6 w-6 text-primary" />
+                      </div>
+                      <div>
+                        <h2 className="text-xl font-bold mb-2">Estudio Financiero TAMV 2025-2028</h2>
+                        <p className="text-muted-foreground mb-4">
+                          Proyecciones de ingresos, usuarios y sostenibilidad basadas en análisis de mercado LATAM.
+                          Escenario conservador con penetración del 0.73% TAM en 36 meses.
+                        </p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <FinancialDashboard />
               </TabsContent>
             </Tabs>
           </main>
