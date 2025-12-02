@@ -15,6 +15,7 @@ import PuentesOniricos from "./pages/PuentesOniricos";
 import DevHub from "./pages/DevHub";
 import XRExperience from "./pages/XRExperience";
 import BancoTAMV from "./pages/BancoTAMV";
+import TutorialsHub from "./pages/TutorialsHub";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -38,6 +39,7 @@ const App = () => (
           <Route path="/dev-hub" element={<DevHub />} />
           <Route path="/xr" element={<XRExperience />} />
           <Route path="/banco" element={<BancoTAMV />} />
+          <Route path="/tutoriales" element={<TutorialsHub />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
