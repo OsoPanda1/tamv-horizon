@@ -20,8 +20,8 @@
     --popover: 222 47% 6%;
     --popover-foreground: 210 40% 98%;
 
-    /* Primary - Golden Aztec */
-    --primary: 45 93% 47%;
+    /* Primary - Oro Hiperrealista TAMV */
+    --primary: 43 96% 56%;
     --primary-foreground: 222 47% 4%;
 
     /* Secondary - Deep Obsidian */
@@ -43,7 +43,7 @@
     /* Border & Input */
     --border: 217 33% 18%;
     --input: 217 33% 15%;
-    --ring: 45 93% 47%;
+    --ring: 43 96% 56%;
 
     --radius: 0.75rem;
 
@@ -57,23 +57,27 @@
     --sidebar-border: 217 33% 15%;
     --sidebar-ring: 45 93% 47%;
 
-    /* TAMV Custom Tokens */
-    --tamv-gold: 45 93% 47%;
-    --tamv-gold-glow: 45 93% 60%;
+    /* TAMV Custom Tokens - Oro Hiperrealista */
+    --tamv-gold: 43 96% 56%;
+    --tamv-gold-light: 45 100% 65%;
+    --tamv-gold-dark: 38 90% 45%;
+    --tamv-gold-glow: 43 96% 70%;
     --tamv-cyan: 186 100% 50%;
     --tamv-cyan-glow: 186 100% 70%;
     --tamv-purple: 270 70% 50%;
     --tamv-emerald: 160 84% 39%;
     --tamv-coral: 16 100% 66%;
 
-    /* Gradients */
-    --gradient-gold: linear-gradient(135deg, hsl(45 93% 47%), hsl(35 93% 40%));
+    /* Gradients - Oro Hiperrealista con profundidad */
+    --gradient-gold: linear-gradient(135deg, hsl(43 96% 56%), hsl(38 90% 45%), hsl(35 85% 38%));
+    --gradient-gold-metallic: linear-gradient(135deg, hsl(45 100% 65%), hsl(43 96% 56%), hsl(38 90% 45%), hsl(43 96% 56%));
     --gradient-cyan: linear-gradient(135deg, hsl(186 100% 50%), hsl(200 100% 40%));
     --gradient-aztec: linear-gradient(180deg, hsl(222 47% 8%), hsl(222 47% 3%));
-    --gradient-ceremonial: linear-gradient(135deg, hsl(45 93% 47% / 0.2), hsl(186 100% 50% / 0.1));
+    --gradient-ceremonial: linear-gradient(135deg, hsl(43 96% 56% / 0.3), hsl(186 100% 50% / 0.15));
 
-    /* Shadows */
-    --shadow-gold: 0 0 30px hsl(45 93% 47% / 0.3);
+    /* Shadows - Oro realista con múltiples capas */
+    --shadow-gold: 0 0 30px hsl(43 96% 56% / 0.4), 0 0 60px hsl(43 96% 56% / 0.2);
+    --shadow-gold-intense: 0 0 40px hsl(43 96% 56% / 0.6), 0 0 80px hsl(43 96% 56% / 0.3), 0 0 120px hsl(43 96% 56% / 0.1);
     --shadow-cyan: 0 0 30px hsl(186 100% 50% / 0.3);
     --shadow-card: 0 4px 20px hsl(0 0% 0% / 0.4);
 
@@ -135,17 +139,35 @@
 }
 
 @layer components {
-  /* TAMV Button Variants */
+  /* TAMV Button Variants - Oro Hiperrealista */
   .btn-tamv-gold {
-    @apply bg-primary text-primary-foreground font-semibold;
-    background: var(--gradient-gold);
+    @apply text-primary-foreground font-semibold;
+    background: var(--gradient-gold-metallic);
     box-shadow: var(--shadow-gold);
     transition: var(--transition-smooth);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-tamv-gold::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+      45deg,
+      transparent 30%,
+      hsl(45 100% 75% / 0.3) 50%,
+      transparent 70%
+    );
+    animation: gold-shimmer 3s infinite;
   }
 
   .btn-tamv-gold:hover {
     transform: translateY(-2px);
-    box-shadow: 0 0 40px hsl(var(--tamv-gold) / 0.5);
+    box-shadow: var(--shadow-gold-intense);
   }
 
   .btn-tamv-cyan {
@@ -284,10 +306,19 @@
 /* Keyframes */
 @keyframes glow-pulse {
   0%, 100% {
-    box-shadow: 0 0 20px hsl(var(--tamv-gold) / 0.3);
+    box-shadow: 0 0 20px hsl(var(--tamv-gold) / 0.4), 0 0 40px hsl(var(--tamv-gold) / 0.2);
   }
   50% {
-    box-shadow: 0 0 40px hsl(var(--tamv-gold) / 0.6);
+    box-shadow: 0 0 40px hsl(var(--tamv-gold) / 0.7), 0 0 80px hsl(var(--tamv-gold) / 0.4);
+  }
+}
+
+@keyframes gold-shimmer {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg);
   }
 }
 

@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { Search, Bell, HelpCircle, Menu, X } from "lucide-react";
+import { Search, HelpCircle, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
 import tamvLogo from "@/assets/tamv-logo.png";
 import WalletIconButton from "@/components/wallet/WalletIconButton";
+import NotificationCenter from "@/components/notifications/NotificationCenter";
 
 interface TopToolbarProps {
   onMenuToggle?: () => void;
@@ -14,7 +14,6 @@ interface TopToolbarProps {
 
 export default function TopToolbar({ onMenuToggle, onHelpClick, isSidebarOpen }: TopToolbarProps) {
   const [searchQuery, setSearchQuery] = useState("");
-  const [notificationCount] = useState(3);
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 h-16 bg-card/95 backdrop-blur-md border-b border-border">
@@ -64,16 +63,7 @@ export default function TopToolbar({ onMenuToggle, onHelpClick, isSidebarOpen }:
           </Button>
 
           {/* Notifications */}
-          <Button variant="ghost" size="icon" className="relative">
-            <Bell className="h-5 w-5" />
-            {notificationCount > 0 && (
-              <Badge 
-                className="absolute -top-1 -right-1 h-5 w-5 p-0 flex items-center justify-center bg-destructive text-destructive-foreground text-xs"
-              >
-                {notificationCount}
-              </Badge>
-            )}
-          </Button>
+          <NotificationCenter />
 
           {/* Help / Tutorials */}
           <Button 
