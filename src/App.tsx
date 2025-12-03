@@ -2,7 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import Conciertos from "./pages/Conciertos";
@@ -16,6 +16,7 @@ import DevHub from "./pages/DevHub";
 import XRExperience from "./pages/XRExperience";
 import BancoTAMV from "./pages/BancoTAMV";
 import TutorialsHub from "./pages/TutorialsHub";
+import Explorar from "./pages/Explorar";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -29,6 +30,7 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/auth" element={<Auth />} />
+          <Route path="/explorar" element={<Explorar />} />
           <Route path="/conciertos" element={<Conciertos />} />
           <Route path="/subastas" element={<Subastas />} />
           <Route path="/dreamspaces" element={<DreamSpaces />} />
@@ -40,6 +42,12 @@ const App = () => (
           <Route path="/xr" element={<XRExperience />} />
           <Route path="/banco" element={<BancoTAMV />} />
           <Route path="/tutoriales" element={<TutorialsHub />} />
+          {/* Redirects for incomplete pages */}
+          <Route path="/retos" element={<Navigate to="/explorar" replace />} />
+          <Route path="/dao" element={<Navigate to="/dev-hub" replace />} />
+          <Route path="/documentos" element={<Navigate to="/dev-hub" replace />} />
+          <Route path="/protocolos" element={<Navigate to="/dev-hub" replace />} />
+          <Route path="/configuracion" element={<Navigate to="/auth" replace />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
