@@ -11,7 +11,7 @@ import { formatDistanceToNow } from "date-fns";
 import { es } from "date-fns/locale";
 import { 
   Heart, MessageCircle, Share2, Bookmark, 
-  MoreHorizontal, Play, Image, Volume2 
+  MoreHorizontal, Play, Volume2 
 } from "lucide-react";
 import VirtualGifts from "@/components/gifts/VirtualGifts";
 import { cn } from "@/lib/utils";
@@ -20,7 +20,7 @@ interface Post {
   id: string;
   content: string;
   media_urls: string[];
-  media_type: "image" | "video" | "audio" | null;
+  media_types: string[];
   user_id: string;
   likes_count: number;
   comments_count: number;
@@ -36,96 +36,146 @@ interface Post {
   is_saved?: boolean;
 }
 
-export default function PostsFeed() {
+interface PostsFeedProps {
+  refreshTrigger?: number;
+}
+
+export default function PostsFeed({ refreshTrigger }: PostsFeedProps) {
   const { user } = useAuth();
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
 
-  const fetchPosts = useCallback(async (pageNum: number = 0) => {
+  const fetchPosts = useCallback(async (pageNum: number = 0, append: boolean = false) => {
     try {
       const limit = 10;
       const from = pageNum * limit;
       
-      // Simulated posts for now (will be replaced with real data when posts table exists)
-      const mockPosts: Post[] = [
-        {
-          id: "1",
-          content: "¡Acabo de crear mi primer DreamSpace! 🌟 Es un espacio inspirado en los templos aztecas con elementos de realidad virtual. ¡Vengan a explorarlo!",
-          media_urls: [],
-          media_type: null,
-          user_id: "mock-user-1",
-          likes_count: 42,
-          comments_count: 7,
-          shares_count: 3,
-          created_at: new Date(Date.now() - 3600000).toISOString(),
-          author: {
-            username: "creador_cosmico",
-            display_name: "Luna Xochitl",
-            avatar_url: "",
-            level: 12
-          },
-          is_liked: false,
-          is_saved: false
-        },
-        {
-          id: "2",
-          content: "Mi mascota digital acaba de subir al nivel 10 🐉✨ Los Quantum Pets son increíbles, tienen personalidad propia.",
-          media_urls: [],
-          media_type: null,
-          user_id: "mock-user-2",
-          likes_count: 89,
-          comments_count: 15,
-          shares_count: 8,
-          created_at: new Date(Date.now() - 7200000).toISOString(),
-          author: {
-            username: "dragon_master",
-            display_name: "Carlos Tonatiuh",
-            avatar_url: "",
-            level: 25
-          },
-          is_liked: true,
-          is_saved: false
-        },
-        {
-          id: "3",
-          content: "La subasta de arte digital termina en 2 horas. ¡Quedan piezas increíbles de artistas mexicanos! 🎨 #ArteTAMV #NFT",
-          media_urls: [],
-          media_type: null,
-          user_id: "mock-user-3",
-          likes_count: 156,
-          comments_count: 23,
-          shares_count: 45,
-          created_at: new Date(Date.now() - 10800000).toISOString(),
-          author: {
-            username: "arte_digital_mx",
-            display_name: "Galería Quetzal",
-            avatar_url: "",
-            level: 30
-          },
-          is_liked: false,
-          is_saved: true
-        }
-      ];
+      // Fetch posts from database
+      const { data: postsData, error: postsError } = await supabase
+        .from("posts")
+        .select("*")
+        .eq("visibility", "public")
+        .order("created_at", { ascending: false })
+        .range(from, from + limit - 1);
 
-      if (pageNum === 0) {
-        setPosts(mockPosts);
+      if (postsError) {
+        console.error("Error fetching posts:", postsError);
+        throw postsError;
+      }
+
+      if (!postsData || postsData.length === 0) {
+        if (!append) setPosts([]);
+        setHasMore(false);
+        setLoading(false);
+        return;
+      }
+
+      // Get unique user IDs
+      const userIds = [...new Set(postsData.map(p => p.user_id))];
+
+      // Fetch profiles for all post authors
+      const { data: profiles } = await supabase
+        .from("profiles")
+        .select("user_id, username, display_name, avatar_url, level")
+        .in("user_id", userIds);
+
+      const profileMap = new Map(profiles?.map(p => [p.user_id, p]) || []);
+
+      // Check which posts the current user has liked
+      let likedPostIds: Set<string> = new Set();
+      let savedPostIds: Set<string> = new Set();
+
+      if (user) {
+        const postIds = postsData.map(p => p.id);
+        
+        const [likesResult, savesResult] = await Promise.all([
+          supabase
+            .from("post_likes")
+            .select("post_id")
+            .eq("user_id", user.id)
+            .in("post_id", postIds),
+          supabase
+            .from("post_saves")
+            .select("post_id")
+            .eq("user_id", user.id)
+            .in("post_id", postIds)
+        ]);
+
+        likedPostIds = new Set(likesResult.data?.map(l => l.post_id) || []);
+        savedPostIds = new Set(savesResult.data?.map(s => s.post_id) || []);
+      }
+
+      // Transform posts with author info
+      const transformedPosts: Post[] = postsData.map(post => {
+        const profile = profileMap.get(post.user_id);
+        return {
+          id: post.id,
+          content: post.content || "",
+          media_urls: post.media_urls || [],
+          media_types: post.media_types || [],
+          user_id: post.user_id,
+          likes_count: post.likes_count || 0,
+          comments_count: post.comments_count || 0,
+          shares_count: post.shares_count || 0,
+          created_at: post.created_at,
+          author: {
+            username: profile?.username || "usuario",
+            display_name: profile?.display_name || "Usuario TAMV",
+            avatar_url: profile?.avatar_url || "",
+            level: profile?.level || 1
+          },
+          is_liked: likedPostIds.has(post.id),
+          is_saved: savedPostIds.has(post.id)
+        };
+      });
+
+      if (append) {
+        setPosts(prev => [...prev, ...transformedPosts]);
       } else {
-        setPosts(prev => [...prev, ...mockPosts.map(p => ({...p, id: p.id + '-' + pageNum}))]);
+        setPosts(transformedPosts);
       }
       
-      setHasMore(pageNum < 3);
+      setHasMore(postsData.length === limit);
       setLoading(false);
     } catch (error) {
       console.error("Error fetching posts:", error);
       toast.error("Error al cargar publicaciones");
       setLoading(false);
     }
-  }, []);
+  }, [user]);
 
+  // Initial fetch
   useEffect(() => {
     fetchPosts(0);
+  }, [fetchPosts]);
+
+  // Refetch when trigger changes
+  useEffect(() => {
+    if (refreshTrigger !== undefined) {
+      setPage(0);
+      fetchPosts(0);
+    }
+  }, [refreshTrigger, fetchPosts]);
+
+  // Realtime subscription
+  useEffect(() => {
+    const channel = supabase
+      .channel('posts-realtime')
+      .on(
+        'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'posts' },
+        () => {
+          // Refetch to get the new post with author info
+          fetchPosts(0);
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, [fetchPosts]);
 
   const handleLike = async (postId: string) => {
@@ -134,16 +184,54 @@ export default function PostsFeed() {
       return;
     }
 
+    const post = posts.find(p => p.id === postId);
+    if (!post) return;
+
+    const isLiked = post.is_liked;
+
+    // Optimistic update
     setPosts(prev => prev.map(p => {
       if (p.id === postId) {
         return {
           ...p,
-          is_liked: !p.is_liked,
-          likes_count: p.is_liked ? p.likes_count - 1 : p.likes_count + 1
+          is_liked: !isLiked,
+          likes_count: isLiked ? p.likes_count - 1 : p.likes_count + 1
         };
       }
       return p;
     }));
+
+    try {
+      if (isLiked) {
+        // Remove like
+        await supabase
+          .from("post_likes")
+          .delete()
+          .eq("post_id", postId)
+          .eq("user_id", user.id);
+      } else {
+        // Add like
+        await supabase
+          .from("post_likes")
+          .insert({ post_id: postId, user_id: user.id });
+      }
+
+      // Update post counter
+      await supabase.rpc("increment_post_counter", {
+        _post_id: postId,
+        _counter_name: "likes_count",
+        _increment: isLiked ? -1 : 1
+      });
+    } catch (error) {
+      // Revert on error
+      setPosts(prev => prev.map(p => {
+        if (p.id === postId) {
+          return { ...p, is_liked: isLiked, likes_count: post.likes_count };
+        }
+        return p;
+      }));
+      console.error("Error toggling like:", error);
+    }
   };
 
   const handleSave = async (postId: string) => {
@@ -152,14 +240,43 @@ export default function PostsFeed() {
       return;
     }
 
+    const post = posts.find(p => p.id === postId);
+    if (!post) return;
+
+    const isSaved = post.is_saved;
+
+    // Optimistic update
     setPosts(prev => prev.map(p => {
       if (p.id === postId) {
-        return { ...p, is_saved: !p.is_saved };
+        return { ...p, is_saved: !isSaved };
       }
       return p;
     }));
-    
-    toast.success("Publicación guardada");
+
+    try {
+      if (isSaved) {
+        await supabase
+          .from("post_saves")
+          .delete()
+          .eq("post_id", postId)
+          .eq("user_id", user.id);
+        toast.success("Publicación removida de guardados");
+      } else {
+        await supabase
+          .from("post_saves")
+          .insert({ post_id: postId, user_id: user.id });
+        toast.success("Publicación guardada");
+      }
+    } catch (error) {
+      // Revert on error
+      setPosts(prev => prev.map(p => {
+        if (p.id === postId) {
+          return { ...p, is_saved: isSaved };
+        }
+        return p;
+      }));
+      console.error("Error toggling save:", error);
+    }
   };
 
   const handleShare = async (postId: string) => {
@@ -179,7 +296,7 @@ export default function PostsFeed() {
     if (hasMore && !loading) {
       const nextPage = page + 1;
       setPage(nextPage);
-      fetchPosts(nextPage);
+      fetchPosts(nextPage, true);
     }
   };
 
@@ -201,6 +318,19 @@ export default function PostsFeed() {
           </Card>
         ))}
       </div>
+    );
+  }
+
+  if (posts.length === 0) {
+    return (
+      <Card className="card-tamv p-8 text-center">
+        <p className="text-muted-foreground mb-4">
+          Aún no hay publicaciones. ¡Sé el primero en compartir!
+        </p>
+        <p className="text-sm text-primary">
+          Comienza a crear contenido y conecta con la comunidad TAMV 🌟
+        </p>
+      </Card>
     );
   }
 
@@ -251,36 +381,54 @@ export default function PostsFeed() {
 
             {/* Media Preview */}
             {post.media_urls && post.media_urls.length > 0 && (
-              <div className="mt-3 rounded-xl overflow-hidden border border-border">
-                {post.media_type === "image" && (
-                  <img 
-                    src={post.media_urls[0]} 
-                    alt="Post media"
-                    className="w-full max-h-96 object-cover"
-                  />
-                )}
-                {post.media_type === "video" && (
-                  <div className="relative aspect-video bg-black">
-                    <video 
-                      src={post.media_urls[0]}
-                      className="w-full h-full"
-                      controls
-                    />
-                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                      <div className="w-16 h-16 rounded-full bg-primary/80 flex items-center justify-center">
-                        <Play className="h-8 w-8 text-primary-foreground ml-1" />
+              <div className={cn(
+                "mt-3 rounded-xl overflow-hidden border border-border",
+                post.media_urls.length > 1 && "grid grid-cols-2 gap-1"
+              )}>
+                {post.media_urls.map((url, idx) => {
+                  const type = post.media_types?.[idx] || "image";
+                  
+                  if (type === "image") {
+                    return (
+                      <img 
+                        key={idx}
+                        src={url} 
+                        alt="Post media"
+                        className="w-full max-h-96 object-cover"
+                      />
+                    );
+                  }
+                  
+                  if (type === "video") {
+                    return (
+                      <div key={idx} className="relative aspect-video bg-black">
+                        <video 
+                          src={url}
+                          className="w-full h-full"
+                          controls
+                        />
+                        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                          <div className="w-16 h-16 rounded-full bg-primary/80 flex items-center justify-center">
+                            <Play className="h-8 w-8 text-primary-foreground ml-1" />
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  </div>
-                )}
-                {post.media_type === "audio" && (
-                  <div className="p-4 bg-muted/50 flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-lg bg-primary/20 flex items-center justify-center">
-                      <Volume2 className="h-6 w-6 text-primary" />
-                    </div>
-                    <audio src={post.media_urls[0]} controls className="flex-1" />
-                  </div>
-                )}
+                    );
+                  }
+                  
+                  if (type === "audio") {
+                    return (
+                      <div key={idx} className="p-4 bg-muted/50 flex items-center gap-3">
+                        <div className="w-12 h-12 rounded-lg bg-primary/20 flex items-center justify-center">
+                          <Volume2 className="h-6 w-6 text-primary" />
+                        </div>
+                        <audio src={url} controls className="flex-1" />
+                      </div>
+                    );
+                  }
+                  
+                  return null;
+                })}
               </div>
             )}
           </CardContent>
