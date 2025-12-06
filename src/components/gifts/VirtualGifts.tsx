@@ -1,30 +1,20 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { Gift, Heart, Star, Sparkles, Crown, Gem, Flame, Zap } from "lucide-react";
+import { Gift, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface VirtualGift {
   id: string;
   name: string;
-  icon: React.ElementType;
+  icon_url: string;
   price: number;
-  animation: string;
-  color: string;
+  rarity: string;
+  category: string;
 }
-
-const VIRTUAL_GIFTS: VirtualGift[] = [
-  { id: "heart", name: "Corazón", icon: Heart, price: 5, animation: "animate-bounce", color: "text-red-500" },
-  { id: "star", name: "Estrella", icon: Star, price: 10, animation: "animate-spin", color: "text-yellow-500" },
-  { id: "sparkles", name: "Destellos", icon: Sparkles, price: 25, animation: "animate-pulse", color: "text-purple-500" },
-  { id: "crown", name: "Corona", icon: Crown, price: 50, animation: "animate-bounce", color: "text-amber-500" },
-  { id: "gem", name: "Gema", icon: Gem, price: 100, animation: "animate-pulse", color: "text-cyan-500" },
-  { id: "flame", name: "Llama", icon: Flame, price: 200, animation: "animate-pulse", color: "text-orange-500" },
-  { id: "lightning", name: "Rayo", icon: Zap, price: 500, animation: "animate-bounce", color: "text-yellow-400" },
-];
 
 interface VirtualGiftsProps {
   recipientId: string;
@@ -33,6 +23,14 @@ interface VirtualGiftsProps {
   contextId?: string;
   onGiftSent?: (gift: VirtualGift) => void;
 }
+
+const RARITY_COLORS: Record<string, string> = {
+  common: "border-gray-400",
+  rare: "border-blue-500",
+  epic: "border-purple-500",
+  legendary: "border-amber-500",
+  mythic: "border-rose-500"
+};
 
 export default function VirtualGifts({
   recipientId,
@@ -45,6 +43,31 @@ export default function VirtualGifts({
   const [open, setOpen] = useState(false);
   const [sending, setSending] = useState(false);
   const [selectedGift, setSelectedGift] = useState<VirtualGift | null>(null);
+  const [gifts, setGifts] = useState<VirtualGift[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch virtual gifts from database
+  useEffect(() => {
+    const fetchGifts = async () => {
+      const { data, error } = await supabase
+        .from("virtual_gifts")
+        .select("*")
+        .eq("is_active", true)
+        .order("price", { ascending: true });
+
+      if (error) {
+        console.error("Error fetching gifts:", error);
+        return;
+      }
+
+      setGifts(data || []);
+      setLoading(false);
+    };
+
+    if (open) {
+      fetchGifts();
+    }
+  }, [open]);
 
   const sendGift = async (gift: VirtualGift) => {
     if (!user) {
@@ -95,7 +118,7 @@ export default function VirtualGifts({
       }
 
       // Create transaction record
-      await supabase.from("transactions").insert({
+      const { data: transaction } = await supabase.from("transactions").insert({
         user_id: user.id,
         type: "expense",
         amount: gift.price,
@@ -108,11 +131,22 @@ export default function VirtualGifts({
         status: "completed",
         module: contextType,
         metadata: {
-          gift_type: gift.id,
+          gift_id: gift.id,
           recipient_id: recipientId,
           context_type: contextType,
           context_id: contextId
         }
+      }).select().single();
+
+      // Record gift transaction
+      await supabase.from("gift_transactions").insert({
+        gift_id: gift.id,
+        sender_id: user.id,
+        recipient_id: recipientId,
+        amount: gift.price,
+        context_type: contextType,
+        context_id: contextId,
+        transaction_id: transaction?.id
       });
 
       // Create notification for recipient
@@ -121,7 +155,7 @@ export default function VirtualGifts({
         title: "¡Nuevo regalo!",
         message: `Has recibido un ${gift.name} de un admirador`,
         type: "social",
-        icon: "🎁"
+        icon: gift.icon_url
       });
 
       toast.success(`¡${gift.name} enviado a ${recipientName}!`);
@@ -159,17 +193,27 @@ export default function VirtualGifts({
 
         {/* Gift Animation Display */}
         {selectedGift && (
-          <div className="flex justify-center py-8">
-            <div className={cn("text-6xl", selectedGift.animation, selectedGift.color)}>
-              <selectedGift.icon className="h-24 w-24" />
+          <div className="flex flex-col items-center justify-center py-8">
+            <div className="text-6xl animate-bounce mb-4">
+              {selectedGift.icon_url}
             </div>
+            <p className="text-lg font-semibold text-primary">
+              ¡{selectedGift.name} enviado!
+            </p>
+          </div>
+        )}
+
+        {/* Loading */}
+        {loading && !selectedGift && (
+          <div className="flex justify-center py-8">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
           </div>
         )}
 
         {/* Gift Grid */}
-        {!selectedGift && (
+        {!selectedGift && !loading && (
           <div className="grid grid-cols-3 gap-3 mt-4">
-            {VIRTUAL_GIFTS.map(gift => (
+            {gifts.map(gift => (
               <button
                 key={gift.id}
                 onClick={() => sendGift(gift)}
@@ -178,11 +222,13 @@ export default function VirtualGifts({
                   "flex flex-col items-center gap-2 p-4 rounded-xl",
                   "bg-muted/50 hover:bg-muted transition-all",
                   "hover:scale-105 hover:shadow-lg",
-                  "disabled:opacity-50 disabled:cursor-not-allowed"
+                  "disabled:opacity-50 disabled:cursor-not-allowed",
+                  "border-2",
+                  RARITY_COLORS[gift.rarity] || "border-border"
                 )}
               >
-                <gift.icon className={cn("h-8 w-8", gift.color)} />
-                <span className="text-xs font-medium">{gift.name}</span>
+                <span className="text-3xl">{gift.icon_url}</span>
+                <span className="text-xs font-medium text-center">{gift.name}</span>
                 <span className="text-xs text-primary font-bold">{gift.price} TAMV</span>
               </button>
             ))}

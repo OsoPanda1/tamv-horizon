@@ -13,8 +13,8 @@ interface MediaPreview {
   preview: string;
 }
 
-export default function PostComposer() {
-  const { user } = useAuth();
+export default function PostComposer({ onPostCreated }: { onPostCreated?: () => void }) {
+  const { user, profile } = useAuth();
   const [content, setContent] = useState("");
   const [isFocused, setIsFocused] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -51,6 +51,12 @@ export default function PostComposer() {
     });
   };
 
+  // Extract hashtags from content
+  const extractHashtags = (text: string): string[] => {
+    const matches = text.match(/#\w+/g);
+    return matches ? matches.map(tag => tag.toLowerCase()) : [];
+  };
+
   const handleSubmit = async () => {
     if (!content.trim() && mediaFiles.length === 0) return;
     
@@ -63,13 +69,14 @@ export default function PostComposer() {
 
     try {
       const mediaUrls: string[] = [];
+      const mediaTypes: string[] = [];
 
       // Upload media files
       for (const media of mediaFiles) {
         const fileExt = media.file.name.split(".").pop();
         const fileName = `${user.id}/${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
         
-        const { data: uploadData, error: uploadError } = await supabase.storage
+        const { error: uploadError } = await supabase.storage
           .from("posts")
           .upload(fileName, media.file);
 
@@ -85,28 +92,45 @@ export default function PostComposer() {
 
         if (urlData) {
           mediaUrls.push(urlData.publicUrl);
+          mediaTypes.push(media.type);
         }
       }
 
-      // Create post record (assuming a posts table exists or will be created)
-      // For now, log and show success
-      console.log("[POST] Creating post:", {
-        content,
-        media: mediaUrls,
-        userId: user.id
-      });
+      // Extract hashtags
+      const hashtags = extractHashtags(content);
 
-      // Log the event for analytics
+      // Create post in database
+      const { data: newPost, error: postError } = await supabase
+        .from("posts")
+        .insert({
+          user_id: user.id,
+          content: content.trim(),
+          media_urls: mediaUrls,
+          media_types: mediaTypes,
+          hashtags: hashtags,
+          visibility: "public"
+        })
+        .select()
+        .single();
+
+      if (postError) {
+        console.error("Post creation error:", postError);
+        toast.error("Error al crear la publicación");
+        return;
+      }
+
+      // Log the audit event
       await supabase.functions.invoke("audit-log", {
         body: {
           action: "post_created",
           entity_type: "post",
-          entity_id: crypto.randomUUID(),
+          entity_id: newPost.id,
           actor_id: user.id,
           metadata: {
             content_length: content.length,
             media_count: mediaUrls.length,
-            media_types: mediaFiles.map(m => m.type)
+            media_types: mediaTypes,
+            hashtags: hashtags
           }
         }
       }).catch(() => {}); // Silent fail for audit
@@ -115,6 +139,7 @@ export default function PostComposer() {
       setContent("");
       setMediaFiles([]);
       setIsFocused(false);
+      onPostCreated?.();
 
     } catch (error) {
       console.error("Error creating post:", error);
@@ -134,9 +159,9 @@ export default function PostComposer() {
     >
       <div className="flex gap-3">
         <Avatar className="h-10 w-10 ring-2 ring-primary/20">
-          <AvatarImage src={user?.user_metadata?.avatar_url} />
+          <AvatarImage src={profile?.avatarUrl || user?.user_metadata?.avatar_url} />
           <AvatarFallback className="bg-primary/20 text-primary">
-            {user?.email?.[0]?.toUpperCase() || "T"}
+            {profile?.displayName?.[0] || user?.email?.[0]?.toUpperCase() || "T"}
           </AvatarFallback>
         </Avatar>
 
@@ -145,7 +170,7 @@ export default function PostComposer() {
             value={content}
             onChange={(e) => setContent(e.target.value)}
             onFocus={() => setIsFocused(true)}
-            placeholder="¿Qué estás creando hoy?"
+            placeholder="¿Qué estás creando hoy? #TAMV"
             className="w-full bg-transparent resize-none outline-none placeholder:text-muted-foreground text-sm min-h-[60px]"
             rows={isFocused ? 4 : 2}
             disabled={isSubmitting}

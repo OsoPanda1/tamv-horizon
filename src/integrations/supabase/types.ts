@@ -181,6 +181,48 @@ export type Database = {
         }
         Relationships: []
       }
+      bookpi_events: {
+        Row: {
+          created_at: string | null
+          domain: string | null
+          error_code: string | null
+          event_type: string
+          id: string
+          latency_ms: number | null
+          level: string | null
+          metadata: Json | null
+          module: string
+          session_id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          domain?: string | null
+          error_code?: string | null
+          event_type: string
+          id?: string
+          latency_ms?: number | null
+          level?: string | null
+          metadata?: Json | null
+          module: string
+          session_id?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          domain?: string | null
+          error_code?: string | null
+          event_type?: string
+          id?: string
+          latency_ms?: number | null
+          level?: string | null
+          metadata?: Json | null
+          module?: string
+          session_id?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       channel_subscribers: {
         Row: {
           channel_id: string
@@ -603,6 +645,105 @@ export type Database = {
         }
         Relationships: []
       }
+      gamification_achievements: {
+        Row: {
+          category: string | null
+          code: string
+          created_at: string | null
+          description: string | null
+          icon: string | null
+          id: string
+          is_secret: boolean | null
+          name: string
+          requirements: Json | null
+          tamv_reward: number | null
+          tier: number | null
+          xp_reward: number | null
+        }
+        Insert: {
+          category?: string | null
+          code: string
+          created_at?: string | null
+          description?: string | null
+          icon?: string | null
+          id?: string
+          is_secret?: boolean | null
+          name: string
+          requirements?: Json | null
+          tamv_reward?: number | null
+          tier?: number | null
+          xp_reward?: number | null
+        }
+        Update: {
+          category?: string | null
+          code?: string
+          created_at?: string | null
+          description?: string | null
+          icon?: string | null
+          id?: string
+          is_secret?: boolean | null
+          name?: string
+          requirements?: Json | null
+          tamv_reward?: number | null
+          tier?: number | null
+          xp_reward?: number | null
+        }
+        Relationships: []
+      }
+      gift_transactions: {
+        Row: {
+          amount: number
+          context_id: string | null
+          context_type: string | null
+          created_at: string | null
+          gift_id: string
+          id: string
+          message: string | null
+          recipient_id: string
+          sender_id: string
+          transaction_id: string | null
+        }
+        Insert: {
+          amount: number
+          context_id?: string | null
+          context_type?: string | null
+          created_at?: string | null
+          gift_id: string
+          id?: string
+          message?: string | null
+          recipient_id: string
+          sender_id: string
+          transaction_id?: string | null
+        }
+        Update: {
+          amount?: number
+          context_id?: string | null
+          context_type?: string | null
+          created_at?: string | null
+          gift_id?: string
+          id?: string
+          message?: string | null
+          recipient_id?: string
+          sender_id?: string
+          transaction_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gift_transactions_gift_id_fkey"
+            columns: ["gift_id"]
+            isOneToOne: false
+            referencedRelation: "virtual_gifts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gift_transactions_transaction_id_fkey"
+            columns: ["transaction_id"]
+            isOneToOne: false
+            referencedRelation: "transactions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       group_members: {
         Row: {
           group_id: string
@@ -775,6 +916,45 @@ export type Database = {
         }
         Relationships: []
       }
+      isabella_vault: {
+        Row: {
+          content: Json
+          created_at: string | null
+          emotion_context: string | null
+          expires_at: string | null
+          id: string
+          importance: number | null
+          memory_type: string
+          related_entities: string[] | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          content: Json
+          created_at?: string | null
+          emotion_context?: string | null
+          expires_at?: string | null
+          id?: string
+          importance?: number | null
+          memory_type: string
+          related_entities?: string[] | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          content?: Json
+          created_at?: string | null
+          emotion_context?: string | null
+          expires_at?: string | null
+          id?: string
+          importance?: number | null
+          memory_type?: string
+          related_entities?: string[] | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       notifications: {
         Row: {
           action_url: string | null
@@ -885,6 +1065,199 @@ export type Database = {
             columns: ["pet_id"]
             isOneToOne: false
             referencedRelation: "digital_pets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      post_comments: {
+        Row: {
+          content: string
+          created_at: string | null
+          id: string
+          likes_count: number | null
+          parent_comment_id: string | null
+          post_id: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string | null
+          id?: string
+          likes_count?: number | null
+          parent_comment_id?: string | null
+          post_id: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string | null
+          id?: string
+          likes_count?: number | null
+          parent_comment_id?: string | null
+          post_id?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "post_comments_parent_comment_id_fkey"
+            columns: ["parent_comment_id"]
+            isOneToOne: false
+            referencedRelation: "post_comments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "post_comments_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      post_likes: {
+        Row: {
+          created_at: string | null
+          id: string
+          post_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          post_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          post_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "post_likes_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      post_saves: {
+        Row: {
+          created_at: string | null
+          id: string
+          post_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          post_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          post_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "post_saves_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      posts: {
+        Row: {
+          comments_count: number | null
+          content: string | null
+          created_at: string | null
+          hashtags: string[] | null
+          id: string
+          is_edited: boolean | null
+          is_pinned: boolean | null
+          likes_count: number | null
+          location_name: string | null
+          media_types: string[] | null
+          media_urls: string[] | null
+          mentions: string[] | null
+          metadata: Json | null
+          reply_to_id: string | null
+          repost_of_id: string | null
+          saves_count: number | null
+          shares_count: number | null
+          updated_at: string | null
+          user_id: string
+          views_count: number | null
+          visibility: string | null
+        }
+        Insert: {
+          comments_count?: number | null
+          content?: string | null
+          created_at?: string | null
+          hashtags?: string[] | null
+          id?: string
+          is_edited?: boolean | null
+          is_pinned?: boolean | null
+          likes_count?: number | null
+          location_name?: string | null
+          media_types?: string[] | null
+          media_urls?: string[] | null
+          mentions?: string[] | null
+          metadata?: Json | null
+          reply_to_id?: string | null
+          repost_of_id?: string | null
+          saves_count?: number | null
+          shares_count?: number | null
+          updated_at?: string | null
+          user_id: string
+          views_count?: number | null
+          visibility?: string | null
+        }
+        Update: {
+          comments_count?: number | null
+          content?: string | null
+          created_at?: string | null
+          hashtags?: string[] | null
+          id?: string
+          is_edited?: boolean | null
+          is_pinned?: boolean | null
+          likes_count?: number | null
+          location_name?: string | null
+          media_types?: string[] | null
+          media_urls?: string[] | null
+          mentions?: string[] | null
+          metadata?: Json | null
+          reply_to_id?: string | null
+          repost_of_id?: string | null
+          saves_count?: number | null
+          shares_count?: number | null
+          updated_at?: string | null
+          user_id?: string
+          views_count?: number | null
+          visibility?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "posts_reply_to_id_fkey"
+            columns: ["reply_to_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "posts_repost_of_id_fkey"
+            columns: ["repost_of_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
             referencedColumns: ["id"]
           },
         ]
@@ -1128,6 +1501,44 @@ export type Database = {
           },
         ]
       }
+      user_achievements: {
+        Row: {
+          achievement_id: string
+          created_at: string | null
+          id: string
+          max_progress: number | null
+          progress: number | null
+          unlocked_at: string | null
+          user_id: string
+        }
+        Insert: {
+          achievement_id: string
+          created_at?: string | null
+          id?: string
+          max_progress?: number | null
+          progress?: number | null
+          unlocked_at?: string | null
+          user_id: string
+        }
+        Update: {
+          achievement_id?: string
+          created_at?: string | null
+          id?: string
+          max_progress?: number | null
+          progress?: number | null
+          unlocked_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_achievements_achievement_id_fkey"
+            columns: ["achievement_id"]
+            isOneToOne: false
+            referencedRelation: "gamification_achievements"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_interactions: {
         Row: {
           created_at: string | null
@@ -1179,6 +1590,51 @@ export type Database = {
           id?: string
           role?: Database["public"]["Enums"]["app_role"]
           user_id?: string
+        }
+        Relationships: []
+      }
+      virtual_gifts: {
+        Row: {
+          animation_url: string | null
+          category: string | null
+          created_at: string | null
+          currency: Database["public"]["Enums"]["currency_type"] | null
+          description: string | null
+          icon_url: string | null
+          id: string
+          is_active: boolean | null
+          metadata: Json | null
+          name: string
+          price: number
+          rarity: Database["public"]["Enums"]["pet_rarity"] | null
+        }
+        Insert: {
+          animation_url?: string | null
+          category?: string | null
+          created_at?: string | null
+          currency?: Database["public"]["Enums"]["currency_type"] | null
+          description?: string | null
+          icon_url?: string | null
+          id?: string
+          is_active?: boolean | null
+          metadata?: Json | null
+          name: string
+          price?: number
+          rarity?: Database["public"]["Enums"]["pet_rarity"] | null
+        }
+        Update: {
+          animation_url?: string | null
+          category?: string | null
+          created_at?: string | null
+          currency?: Database["public"]["Enums"]["currency_type"] | null
+          description?: string | null
+          icon_url?: string | null
+          id?: string
+          is_active?: boolean | null
+          metadata?: Json | null
+          name?: string
+          price?: number
+          rarity?: Database["public"]["Enums"]["pet_rarity"] | null
         }
         Relationships: []
       }
@@ -1242,6 +1698,10 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      increment_post_counter: {
+        Args: { _counter_name: string; _increment?: number; _post_id: string }
+        Returns: undefined
       }
       is_admin: { Args: { _user_id: string }; Returns: boolean }
       log_audit_event: {
