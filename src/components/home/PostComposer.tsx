@@ -159,7 +159,7 @@ export default function PostComposer({ onPostCreated }: { onPostCreated?: () => 
     >
       <div className="flex gap-3">
         <Avatar className="h-10 w-10 ring-2 ring-primary/20">
-          <AvatarImage src={profile?.avatarUrl || user?.user_metadata?.avatar_url} />
+          <AvatarImage src={profile?.avatar || user?.user_metadata?.avatar_url} />
           <AvatarFallback className="bg-primary/20 text-primary">
             {profile?.displayName?.[0] || user?.email?.[0]?.toUpperCase() || "T"}
           </AvatarFallback>
