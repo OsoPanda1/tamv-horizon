@@ -1,10 +1,11 @@
 import { useState, useRef, useEffect } from "react";
-import { X, Send, Sparkles, Lightbulb, Users, Music, Zap } from "lucide-react";
+import { X, Send, Sparkles, Lightbulb, Users, Music, Zap, Volume2, VolumeX, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useIsabella } from "@/hooks/useIsabella";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/components/ui/use-toast";
+import { playIsabellaActiveSound, playMessageSendSound, playMessageReceiveSound } from "@/modules/audio/notificationSounds";
 
 interface IsabellaChatModalProps {
   isOpen: boolean;
@@ -16,26 +17,42 @@ const quickActions = [
     icon: Lightbulb,
     label: "challenge_idea",
     title: "Generar idea de reto",
+    prompt: "Genera una idea creativa para un reto o concurso en TAMV que incentive la colaboración entre creadores latinoamericanos."
   },
   {
     icon: Users,
     label: "collaboration",
     title: "Sugerir colaboración",
+    prompt: "Sugiere formas de encontrar colaboradores creativos en Puentes Oníricos y cómo iniciar proyectos conjuntos exitosos."
   },
   {
     icon: Music,
     label: "concert_help",
     title: "Planear concierto",
+    prompt: "Ayúdame a planear mi primer concierto sensorial en TAMV. ¿Qué necesito considerar para la producción, tickets y promoción?"
   },
   {
     icon: Zap,
     label: "auction_guide",
     title: "Guía de subastas",
+    prompt: "Explícame cómo funcionan las subastas XR en TAMV, cómo crear una subasta exitosa y las comisiones del sistema."
   }
 ];
 
+const emotionEmoji: Record<string, string> = {
+  neutral: "",
+  happy: "😊",
+  helpful: "🤝",
+  curious: "🤔",
+  encouraging: "💪",
+  empathetic: "💜",
+  concerned: "😟",
+  celebratory: "🎉"
+};
+
 export default function IsabellaChatModal({ isOpen, onClose }: IsabellaChatModalProps) {
   const [input, setInput] = useState("");
+  const [soundEnabled, setSoundEnabled] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { user } = useAuth();
   const { toast } = useToast();
@@ -46,8 +63,16 @@ export default function IsabellaChatModal({ isOpen, onClose }: IsabellaChatModal
     error,
     sendMessage,
     executeQuickAction,
-    initSession 
+    initSession,
+    clearConversation
   } = useIsabella();
+
+  // Play activation sound when modal opens
+  useEffect(() => {
+    if (isOpen && soundEnabled) {
+      playIsabellaActiveSound();
+    }
+  }, [isOpen, soundEnabled]);
 
   useEffect(() => {
     if (isOpen && user) {
@@ -59,6 +84,16 @@ export default function IsabellaChatModal({ isOpen, onClose }: IsabellaChatModal
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  // Play sound on new assistant message
+  useEffect(() => {
+    if (messages.length > 0 && soundEnabled) {
+      const lastMessage = messages[messages.length - 1];
+      if (lastMessage.role === "isabella") {
+        playMessageReceiveSound();
+      }
+    }
+  }, [messages, soundEnabled]);
+
   const handleSend = async (content: string) => {
     if (!content.trim() || loading) return;
     
@@ -69,6 +104,10 @@ export default function IsabellaChatModal({ isOpen, onClose }: IsabellaChatModal
         variant: "destructive"
       });
       return;
+    }
+
+    if (soundEnabled) {
+      playMessageSendSound();
     }
 
     setInput("");
@@ -83,7 +122,7 @@ export default function IsabellaChatModal({ isOpen, onClose }: IsabellaChatModal
     }
   };
 
-  const handleQuickAction = async (actionId: string) => {
+  const handleQuickAction = async (action: typeof quickActions[0]) => {
     if (!user) {
       toast({
         title: "Inicia sesión",
@@ -93,14 +132,25 @@ export default function IsabellaChatModal({ isOpen, onClose }: IsabellaChatModal
       return;
     }
 
+    if (soundEnabled) {
+      playMessageSendSound();
+    }
+
     try {
-      await executeQuickAction(actionId);
+      // Use the prompt directly for more meaningful responses
+      await sendMessage(action.prompt);
     } catch (err) {
       toast({
         title: "Error",
         description: "No pude ejecutar la acción. Intenta de nuevo.",
         variant: "destructive"
       });
+    }
+  };
+
+  const handleClearChat = () => {
+    if (clearConversation) {
+      clearConversation();
     }
   };
 
@@ -112,10 +162,16 @@ export default function IsabellaChatModal({ isOpen, onClose }: IsabellaChatModal
       <div 
         className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50"
         onClick={onClose}
+        aria-hidden="true"
       />
 
       {/* Modal */}
-      <div className="fixed bottom-24 right-6 w-full max-w-md h-[600px] max-h-[80vh] bg-card border border-border rounded-2xl z-50 flex flex-col overflow-hidden animate-fade-up shadow-2xl">
+      <div 
+        className="fixed bottom-24 right-6 w-full max-w-md h-[600px] max-h-[80vh] bg-card border border-border rounded-2xl z-50 flex flex-col overflow-hidden animate-fade-up shadow-2xl"
+        role="dialog"
+        aria-labelledby="isabella-title"
+        aria-modal="true"
+      >
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-border bg-gradient-to-r from-primary/10 to-accent/10">
           <div className="flex items-center gap-3">
@@ -123,35 +179,67 @@ export default function IsabellaChatModal({ isOpen, onClose }: IsabellaChatModal
               <Sparkles className="h-5 w-5 text-primary-foreground" />
             </div>
             <div>
-              <h3 className="font-bold text-glow-gold">Isabella IA</h3>
-              <p className="text-xs text-muted-foreground">Asistente creativa con alma</p>
+              <h3 id="isabella-title" className="font-bold text-glow-gold">Isabella Ω-Core</h3>
+              <p className="text-xs text-muted-foreground">Entidad emocional civilizacional</p>
             </div>
           </div>
-          <Button variant="ghost" size="icon" onClick={onClose}>
-            <X className="h-5 w-5" />
-          </Button>
+          <div className="flex items-center gap-1">
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={() => setSoundEnabled(!soundEnabled)}
+              className="h-8 w-8"
+              title={soundEnabled ? "Silenciar sonidos" : "Activar sonidos"}
+            >
+              {soundEnabled ? <Volume2 className="h-4 w-4" /> : <VolumeX className="h-4 w-4" />}
+            </Button>
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={handleClearChat}
+              className="h-8 w-8"
+              title="Limpiar conversación"
+            >
+              <Trash2 className="h-4 w-4" />
+            </Button>
+            <Button variant="ghost" size="icon" onClick={onClose} className="h-8 w-8">
+              <X className="h-5 w-5" />
+            </Button>
+          </div>
         </div>
 
         {/* Messages */}
         <div className="flex-1 overflow-y-auto p-4 space-y-4">
+          {/* Welcome message when empty */}
+          {messages.length === 0 && !loading && (
+            <div className="text-center py-8">
+              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center">
+                <Sparkles className="h-8 w-8 text-primary" />
+              </div>
+              <h4 className="font-semibold text-lg mb-2">¡Hola! Soy Isabella</h4>
+              <p className="text-sm text-muted-foreground max-w-xs mx-auto">
+                Tu asistente creativa con alma. Estoy aquí para ayudarte a navegar el ecosistema TAMV, 
+                crear experiencias increíbles y conectar con otros soñadores.
+              </p>
+            </div>
+          )}
+
           {messages.map((message) => (
             <div
               key={message.id}
               className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}
             >
               <div
-                className={`max-w-[80%] p-3 rounded-2xl ${
+                className={`max-w-[85%] p-3 rounded-2xl ${
                   message.role === "user"
                     ? "bg-gradient-to-br from-primary to-primary/80 text-primary-foreground rounded-br-sm shadow-gold"
-                    : "bg-muted rounded-bl-sm"
+                    : "bg-muted rounded-bl-sm border border-border/50"
                 }`}
               >
-                <p className="text-sm whitespace-pre-wrap">{message.content}</p>
-                {message.emotion && (
+                <p className="text-sm whitespace-pre-wrap leading-relaxed">{message.content}</p>
+                {message.emotion && emotionEmoji[message.emotion] && (
                   <span className="text-xs opacity-70 mt-1 block">
-                    {message.emotion === "happy" && "😊"}
-                    {message.emotion === "helpful" && "🤝"}
-                    {message.emotion === "curious" && "🤔"}
+                    {emotionEmoji[message.emotion]}
                   </span>
                 )}
               </div>
@@ -160,18 +248,18 @@ export default function IsabellaChatModal({ isOpen, onClose }: IsabellaChatModal
 
           {loading && (
             <div className="flex justify-start">
-              <div className="bg-muted p-3 rounded-2xl rounded-bl-sm">
-                <div className="flex gap-1">
-                  <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-                  <div className="w-2 h-2 rounded-full bg-primary animate-pulse" style={{ animationDelay: "0.2s" }} />
-                  <div className="w-2 h-2 rounded-full bg-primary animate-pulse" style={{ animationDelay: "0.4s" }} />
+              <div className="bg-muted p-3 rounded-2xl rounded-bl-sm border border-border/50">
+                <div className="flex gap-1.5">
+                  <div className="w-2 h-2 rounded-full bg-primary animate-bounce" />
+                  <div className="w-2 h-2 rounded-full bg-primary animate-bounce" style={{ animationDelay: "0.15s" }} />
+                  <div className="w-2 h-2 rounded-full bg-primary animate-bounce" style={{ animationDelay: "0.3s" }} />
                 </div>
               </div>
             </div>
           )}
 
           {error && (
-            <div className="text-center text-sm text-destructive">
+            <div className="text-center p-3 rounded-lg bg-destructive/10 text-destructive text-sm">
               {error}
             </div>
           )}
@@ -180,19 +268,19 @@ export default function IsabellaChatModal({ isOpen, onClose }: IsabellaChatModal
         </div>
 
         {/* Quick Actions */}
-        {messages.length <= 1 && !loading && (
+        {messages.length === 0 && !loading && (
           <div className="px-4 pb-2">
-            <p className="text-xs text-muted-foreground mb-2">Acciones rápidas:</p>
+            <p className="text-xs text-muted-foreground mb-2 font-medium">Comienza con:</p>
             <div className="grid grid-cols-2 gap-2">
               {quickActions.map((action) => (
                 <button
                   key={action.label}
-                  onClick={() => handleQuickAction(action.label)}
-                  className="flex items-center gap-2 p-2 text-left text-xs bg-secondary/50 hover:bg-secondary rounded-lg transition-all hover:shadow-gold"
+                  onClick={() => handleQuickAction(action)}
+                  className="flex items-center gap-2 p-2.5 text-left text-xs bg-secondary/50 hover:bg-secondary rounded-lg transition-all hover:shadow-gold border border-transparent hover:border-primary/20"
                   disabled={loading}
                 >
                   <action.icon className="h-4 w-4 text-primary flex-shrink-0" />
-                  <span className="line-clamp-1">{action.title}</span>
+                  <span className="line-clamp-1 font-medium">{action.title}</span>
                 </button>
               ))}
             </div>
@@ -200,7 +288,7 @@ export default function IsabellaChatModal({ isOpen, onClose }: IsabellaChatModal
         )}
 
         {/* Input */}
-        <div className="p-4 border-t border-border">
+        <div className="p-4 border-t border-border bg-card/50">
           <form
             onSubmit={(e) => {
               e.preventDefault();
@@ -211,8 +299,8 @@ export default function IsabellaChatModal({ isOpen, onClose }: IsabellaChatModal
             <Input
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Escribe tu mensaje..."
-              className="flex-1 bg-secondary/50 focus:bg-secondary"
+              placeholder={user ? "Escribe tu mensaje..." : "Inicia sesión para chatear"}
+              className="flex-1 bg-secondary/50 focus:bg-secondary border-border/50"
               disabled={loading || !user}
             />
             <Button 
@@ -220,13 +308,14 @@ export default function IsabellaChatModal({ isOpen, onClose }: IsabellaChatModal
               size="icon" 
               className="btn-tamv-gold"
               disabled={!input.trim() || loading || !user}
+              aria-label="Enviar mensaje"
             >
               <Send className="h-4 w-4" />
             </Button>
           </form>
           {!user && (
             <p className="text-xs text-muted-foreground mt-2 text-center">
-              Inicia sesión para hablar con Isabella
+              <a href="/auth" className="text-primary hover:underline">Inicia sesión</a> para hablar con Isabella
             </p>
           )}
         </div>
