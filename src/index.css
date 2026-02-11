@@ -3,135 +3,135 @@
 @tailwind utilities;
 
 /* TAMV ONLINE - Civilizatory Design System
-   Aztec-Futuristic Dark Theme with Neon Accents
+   Aztec-Futuristic Dark Theme with Hyperrealistic Silver & Cyan Accents
 */
 
 @layer base {
   :root {
     /* Base colors - Deep space background */
     --background: 222 47% 4%;
-    --foreground: 210 40% 98%;
+    --foreground: 210 20% 92%;
 
     /* Card surfaces */
-    --card: 222 47% 7%;
-    --card-foreground: 210 40% 98%;
+    --card: 222 40% 7%;
+    --card-foreground: 210 20% 92%;
 
     /* Popover */
-    --popover: 222 47% 6%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 222 40% 6%;
+    --popover-foreground: 210 20% 92%;
 
-    /* Primary - Oro Hiperrealista TAMV */
-    --primary: 43 96% 56%;
+    /* Primary - Silver Hiperrealista TAMV */
+    --primary: 210 15% 72%;
     --primary-foreground: 222 47% 4%;
 
     /* Secondary - Deep Obsidian */
     --secondary: 217 33% 12%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary-foreground: 210 20% 92%;
 
     /* Muted */
-    --muted: 217 33% 15%;
-    --muted-foreground: 215 20% 55%;
+    --muted: 217 25% 14%;
+    --muted-foreground: 215 15% 55%;
 
     /* Accent - Cyan Neon */
-    --accent: 186 100% 50%;
+    --accent: 186 80% 50%;
     --accent-foreground: 222 47% 4%;
 
     /* Destructive */
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 72% 55%;
+    --destructive-foreground: 210 20% 95%;
 
     /* Border & Input */
-    --border: 217 33% 18%;
-    --input: 217 33% 15%;
-    --ring: 43 96% 56%;
+    --border: 217 20% 20%;
+    --input: 217 25% 14%;
+    --ring: 210 15% 72%;
 
     --radius: 0.75rem;
 
     /* Sidebar */
-    --sidebar-background: 222 47% 5%;
-    --sidebar-foreground: 210 40% 90%;
-    --sidebar-primary: 45 93% 47%;
+    --sidebar-background: 222 42% 5%;
+    --sidebar-foreground: 210 15% 85%;
+    --sidebar-primary: 210 15% 72%;
     --sidebar-primary-foreground: 222 47% 4%;
-    --sidebar-accent: 186 100% 50%;
+    --sidebar-accent: 186 80% 50%;
     --sidebar-accent-foreground: 222 47% 4%;
-    --sidebar-border: 217 33% 15%;
-    --sidebar-ring: 45 93% 47%;
+    --sidebar-border: 217 20% 16%;
+    --sidebar-ring: 210 15% 72%;
 
-    /* TAMV Custom Tokens - Oro Hiperrealista 24K Premium */
-    --tamv-gold: 45 100% 51%;
-    --tamv-gold-light: 48 100% 62%;
-    --tamv-gold-bright: 50 100% 70%;
-    --tamv-gold-dark: 40 95% 42%;
-    --tamv-gold-deep: 36 90% 35%;
-    --tamv-gold-glow: 45 100% 65%;
-    --tamv-gold-shine: 52 100% 78%;
-    --tamv-cyan: 186 100% 50%;
-    --tamv-cyan-glow: 186 100% 70%;
-    --tamv-purple: 270 70% 50%;
-    --tamv-emerald: 160 84% 39%;
-    --tamv-coral: 16 100% 66%;
+    /* TAMV Custom Tokens - Platinum Silver Hiperrealista */
+    --tamv-silver: 210 15% 72%;
+    --tamv-silver-light: 210 18% 82%;
+    --tamv-silver-bright: 210 20% 90%;
+    --tamv-silver-dark: 210 12% 55%;
+    --tamv-silver-deep: 210 10% 42%;
+    --tamv-silver-glow: 210 20% 78%;
+    --tamv-silver-shine: 210 25% 88%;
+    --tamv-cyan: 186 80% 50%;
+    --tamv-cyan-glow: 186 90% 65%;
+    --tamv-purple: 270 60% 55%;
+    --tamv-emerald: 160 70% 42%;
+    --tamv-coral: 16 80% 60%;
 
-    /* Gradients - Oro 24K Hiperrealista con reflejos metálicos */
-    --gradient-gold: linear-gradient(
+    /* Gradients - Platinum Silver Hiperrealista con reflejos metálicos */
+    --gradient-silver: linear-gradient(
       135deg, 
-      hsl(52 100% 78%) 0%,
-      hsl(48 100% 62%) 15%,
-      hsl(45 100% 51%) 30%,
-      hsl(40 95% 42%) 50%,
-      hsl(45 100% 51%) 70%,
-      hsl(48 100% 62%) 85%,
-      hsl(52 100% 78%) 100%
+      hsl(210 25% 90%) 0%,
+      hsl(210 18% 82%) 15%,
+      hsl(210 15% 72%) 30%,
+      hsl(210 12% 55%) 50%,
+      hsl(210 15% 72%) 70%,
+      hsl(210 18% 82%) 85%,
+      hsl(210 25% 90%) 100%
     );
-    --gradient-gold-metallic: linear-gradient(
+    --gradient-silver-metallic: linear-gradient(
       155deg,
-      hsl(52 100% 80%) 0%,
-      hsl(50 100% 70%) 10%,
-      hsl(48 100% 62%) 20%,
-      hsl(45 100% 51%) 35%,
-      hsl(40 95% 42%) 50%,
-      hsl(36 90% 35%) 60%,
-      hsl(40 95% 42%) 70%,
-      hsl(45 100% 51%) 80%,
-      hsl(50 100% 70%) 90%,
-      hsl(52 100% 80%) 100%
+      hsl(210 25% 92%) 0%,
+      hsl(210 22% 85%) 10%,
+      hsl(210 18% 78%) 20%,
+      hsl(210 15% 72%) 35%,
+      hsl(210 12% 58%) 50%,
+      hsl(210 10% 48%) 60%,
+      hsl(210 12% 58%) 70%,
+      hsl(210 15% 72%) 80%,
+      hsl(210 22% 85%) 90%,
+      hsl(210 25% 92%) 100%
     );
-    --gradient-gold-radial: radial-gradient(
+    --gradient-silver-radial: radial-gradient(
       ellipse at 30% 20%,
-      hsl(52 100% 80%) 0%,
-      hsl(48 100% 62%) 25%,
-      hsl(45 100% 51%) 50%,
-      hsl(40 95% 42%) 75%,
-      hsl(36 90% 35%) 100%
+      hsl(210 25% 92%) 0%,
+      hsl(210 18% 78%) 25%,
+      hsl(210 15% 72%) 50%,
+      hsl(210 12% 55%) 75%,
+      hsl(210 10% 42%) 100%
     );
-    --gradient-gold-border: linear-gradient(
+    --gradient-silver-border: linear-gradient(
       90deg,
-      hsl(36 90% 35%) 0%,
-      hsl(45 100% 51%) 25%,
-      hsl(52 100% 80%) 50%,
-      hsl(45 100% 51%) 75%,
-      hsl(36 90% 35%) 100%
+      hsl(210 10% 42%) 0%,
+      hsl(210 15% 72%) 25%,
+      hsl(210 25% 92%) 50%,
+      hsl(210 15% 72%) 75%,
+      hsl(210 10% 42%) 100%
     );
-    --gradient-cyan: linear-gradient(135deg, hsl(186 100% 50%), hsl(200 100% 40%));
-    --gradient-aztec: linear-gradient(180deg, hsl(222 47% 8%), hsl(222 47% 3%));
-    --gradient-ceremonial: linear-gradient(135deg, hsl(45 100% 51% / 0.3), hsl(186 100% 50% / 0.15));
+    --gradient-cyan: linear-gradient(135deg, hsl(186 80% 50%), hsl(200 80% 42%));
+    --gradient-aztec: linear-gradient(180deg, hsl(222 42% 8%), hsl(222 47% 3%));
+    --gradient-ceremonial: linear-gradient(135deg, hsl(210 15% 72% / 0.15), hsl(186 80% 50% / 0.1));
 
-    /* Shadows - Oro 24K con brillo realista multicapa */
-    --shadow-gold: 
-      0 0 15px hsl(45 100% 51% / 0.5),
-      0 0 30px hsl(45 100% 51% / 0.3),
-      0 0 45px hsl(48 100% 62% / 0.2),
-      inset 0 1px 0 hsl(52 100% 80% / 0.3);
-    --shadow-gold-intense: 
-      0 0 20px hsl(45 100% 51% / 0.7),
-      0 0 40px hsl(45 100% 51% / 0.5),
-      0 0 60px hsl(48 100% 62% / 0.3),
-      0 0 100px hsl(45 100% 51% / 0.2),
-      inset 0 1px 0 hsl(52 100% 80% / 0.5);
-    --shadow-gold-subtle: 
-      0 2px 10px hsl(45 100% 51% / 0.2),
-      0 0 20px hsl(45 100% 51% / 0.1);
-    --shadow-cyan: 0 0 30px hsl(186 100% 50% / 0.3);
-    --shadow-card: 0 4px 20px hsl(0 0% 0% / 0.4);
+    /* Shadows - Silver con brillo realista multicapa */
+    --shadow-silver: 
+      0 0 15px hsl(210 15% 72% / 0.35),
+      0 0 30px hsl(210 15% 72% / 0.2),
+      0 0 45px hsl(210 18% 78% / 0.1),
+      inset 0 1px 0 hsl(210 25% 92% / 0.2);
+    --shadow-silver-intense: 
+      0 0 20px hsl(210 15% 72% / 0.5),
+      0 0 40px hsl(210 15% 72% / 0.3),
+      0 0 60px hsl(210 18% 78% / 0.2),
+      0 0 100px hsl(210 15% 72% / 0.1),
+      inset 0 1px 0 hsl(210 25% 92% / 0.35);
+    --shadow-silver-subtle: 
+      0 2px 10px hsl(210 15% 72% / 0.15),
+      0 0 20px hsl(210 15% 72% / 0.08);
+    --shadow-cyan: 0 0 25px hsl(186 80% 50% / 0.25);
+    --shadow-card: 0 4px 20px hsl(0 0% 0% / 0.5);
 
     /* Animations */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -139,24 +139,24 @@
 
   .dark {
     --background: 222 47% 4%;
-    --foreground: 210 40% 98%;
-    --card: 222 47% 7%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222 47% 6%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 45 93% 47%;
+    --foreground: 210 20% 92%;
+    --card: 222 40% 7%;
+    --card-foreground: 210 20% 92%;
+    --popover: 222 40% 6%;
+    --popover-foreground: 210 20% 92%;
+    --primary: 210 15% 72%;
     --primary-foreground: 222 47% 4%;
     --secondary: 217 33% 12%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217 33% 15%;
-    --muted-foreground: 215 20% 55%;
-    --accent: 186 100% 50%;
+    --secondary-foreground: 210 20% 92%;
+    --muted: 217 25% 14%;
+    --muted-foreground: 215 15% 55%;
+    --accent: 186 80% 50%;
     --accent-foreground: 222 47% 4%;
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217 33% 18%;
-    --input: 217 33% 15%;
-    --ring: 45 93% 47%;
+    --destructive: 0 72% 55%;
+    --destructive-foreground: 210 20% 95%;
+    --border: 217 20% 20%;
+    --input: 217 25% 14%;
+    --ring: 210 15% 72%;
   }
 }
 
@@ -172,8 +172,8 @@
 
   /* Custom scrollbar */
   ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+    width: 6px;
+    height: 6px;
   }
 
   ::-webkit-scrollbar-track {
@@ -182,7 +182,7 @@
 
   ::-webkit-scrollbar-thumb {
     background: hsl(var(--muted));
-    border-radius: 4px;
+    border-radius: 3px;
   }
 
   ::-webkit-scrollbar-thumb:hover {
@@ -191,20 +191,22 @@
 }
 
 @layer components {
-  /* TAMV Button Variants - Oro 24K Hiperrealista Premium */
-  .btn-tamv-gold {
+  /* TAMV Button Variants - Platinum Silver Hiperrealista Premium */
+  .btn-tamv-gold,
+  .btn-tamv-silver {
     @apply font-bold tracking-wide;
-    color: hsl(36 90% 15%);
-    background: var(--gradient-gold-metallic);
-    box-shadow: var(--shadow-gold);
+    color: hsl(222 47% 8%);
+    background: var(--gradient-silver-metallic);
+    box-shadow: var(--shadow-silver);
     transition: var(--transition-smooth);
     position: relative;
     overflow: hidden;
-    border: 1px solid hsl(45 100% 51% / 0.5);
-    text-shadow: 0 1px 0 hsl(52 100% 80% / 0.5);
+    border: 1px solid hsl(210 15% 72% / 0.4);
+    text-shadow: 0 1px 0 hsl(210 25% 92% / 0.3);
   }
 
-  .btn-tamv-gold::before {
+  .btn-tamv-gold::before,
+  .btn-tamv-silver::before {
     content: '';
     position: absolute;
     top: 0;
@@ -214,34 +216,37 @@
     background: linear-gradient(
       90deg,
       transparent 0%,
-      hsl(52 100% 85% / 0.4) 25%,
-      hsl(52 100% 90% / 0.6) 50%,
-      hsl(52 100% 85% / 0.4) 75%,
+      hsl(210 30% 92% / 0.3) 25%,
+      hsl(210 35% 95% / 0.5) 50%,
+      hsl(210 30% 92% / 0.3) 75%,
       transparent 100%
     );
-    animation: gold-shimmer-sweep 3s ease-in-out infinite;
+    animation: silver-shimmer-sweep 4s ease-in-out infinite;
   }
 
-  .btn-tamv-gold::after {
+  .btn-tamv-gold::after,
+  .btn-tamv-silver::after {
     content: '';
     position: absolute;
     inset: 0;
     background: linear-gradient(
       180deg,
-      hsl(52 100% 90% / 0.2) 0%,
+      hsl(210 30% 95% / 0.15) 0%,
       transparent 50%,
-      hsl(36 90% 25% / 0.1) 100%
+      hsl(210 10% 30% / 0.08) 100%
     );
     pointer-events: none;
   }
 
-  .btn-tamv-gold:hover {
+  .btn-tamv-gold:hover,
+  .btn-tamv-silver:hover {
     transform: translateY(-2px) scale(1.02);
-    box-shadow: var(--shadow-gold-intense);
-    border-color: hsl(52 100% 75% / 0.7);
+    box-shadow: var(--shadow-silver-intense);
+    border-color: hsl(210 25% 85% / 0.6);
   }
 
-  .btn-tamv-gold:active {
+  .btn-tamv-gold:active,
+  .btn-tamv-silver:active {
     transform: translateY(0) scale(0.98);
   }
 
@@ -255,7 +260,7 @@
 
   .btn-tamv-cyan:hover {
     transform: translateY(-2px);
-    box-shadow: 0 0 40px hsl(var(--tamv-cyan) / 0.5);
+    box-shadow: 0 0 35px hsl(var(--tamv-cyan) / 0.4);
   }
 
   .btn-tamv-ghost {
@@ -265,7 +270,7 @@
 
   .btn-tamv-ghost:hover {
     @apply bg-muted border-primary;
-    box-shadow: 0 0 20px hsl(var(--tamv-gold) / 0.2);
+    box-shadow: 0 0 15px hsl(var(--tamv-silver) / 0.15);
   }
 
   /* TAMV Card Styles */
@@ -277,55 +282,59 @@
   }
 
   .card-tamv:hover {
-    border-color: hsl(var(--tamv-gold) / 0.3);
-    box-shadow: 0 4px 30px hsl(var(--tamv-gold) / 0.1);
+    border-color: hsl(var(--tamv-silver) / 0.25);
+    box-shadow: 0 4px 30px hsl(var(--tamv-silver) / 0.08);
   }
 
   .card-tamv-featured {
     @apply card-tamv;
-    border-color: hsl(var(--tamv-gold) / 0.5);
+    border-color: hsl(var(--tamv-silver) / 0.35);
     background: linear-gradient(145deg, hsl(var(--card)), hsl(var(--background))), var(--gradient-ceremonial);
   }
 
   /* Glow Effects */
-  .glow-gold {
-    box-shadow: var(--shadow-gold);
+  .glow-gold,
+  .glow-silver {
+    box-shadow: var(--shadow-silver);
   }
 
   .glow-cyan {
     box-shadow: var(--shadow-cyan);
   }
 
-  .text-glow-gold {
-    text-shadow: 0 0 20px hsl(var(--tamv-gold) / 0.5);
+  .text-glow-gold,
+  .text-glow-silver {
+    text-shadow: 0 0 15px hsl(var(--tamv-silver) / 0.4);
   }
 
   .text-glow-cyan {
-    text-shadow: 0 0 20px hsl(var(--tamv-cyan) / 0.5);
+    text-shadow: 0 0 15px hsl(var(--tamv-cyan) / 0.4);
   }
 
   /* Aztec Pattern Overlay */
   .aztec-pattern {
-    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0L60 30L30 60L0 30L30 0z' fill='none' stroke='%23c9a227' stroke-opacity='0.05' stroke-width='1'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0L60 30L30 60L0 30L30 0z' fill='none' stroke='%23a0aec0' stroke-opacity='0.04' stroke-width='1'/%3E%3C/svg%3E");
   }
 
   /* Neon Border */
-  .neon-border-gold {
+  .neon-border-gold,
+  .neon-border-silver {
     position: relative;
   }
 
-  .neon-border-gold::before {
+  .neon-border-gold::before,
+  .neon-border-silver::before {
     content: '';
     position: absolute;
     inset: 0;
     border-radius: inherit;
     padding: 1px;
-    background: var(--gradient-gold);
+    background: var(--gradient-silver);
     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
-    opacity: 0.5;
+    opacity: 0.4;
   }
 
   /* Sidebar Navigation */
@@ -339,26 +348,54 @@
   }
 
   .sidebar-nav-item.active {
-    @apply bg-sidebar-accent/20 text-primary;
+    @apply bg-sidebar-accent/15 text-primary;
   }
 
   /* Status Indicators */
   .status-online {
-    @apply w-2.5 h-2.5 rounded-full bg-emerald-500;
-    box-shadow: 0 0 10px hsl(160 84% 39% / 0.5);
+    @apply w-2.5 h-2.5 rounded-full;
+    background: hsl(var(--tamv-emerald));
+    box-shadow: 0 0 8px hsl(var(--tamv-emerald) / 0.5);
   }
 
   .status-live {
-    @apply w-2.5 h-2.5 rounded-full bg-red-500;
-    box-shadow: 0 0 10px hsl(0 84% 60% / 0.5);
+    @apply w-2.5 h-2.5 rounded-full;
+    background: hsl(var(--destructive));
+    box-shadow: 0 0 8px hsl(var(--destructive) / 0.5);
     animation: pulse 2s infinite;
+  }
+
+  /* Security Status Indicators */
+  .sentinel-clean {
+    color: hsl(var(--tamv-emerald));
+    border-color: hsl(var(--tamv-emerald) / 0.3);
+    background: hsl(var(--tamv-emerald) / 0.08);
+  }
+
+  .sentinel-warning {
+    color: hsl(45 90% 55%);
+    border-color: hsl(45 90% 55% / 0.3);
+    background: hsl(45 90% 55% / 0.08);
+  }
+
+  .sentinel-critical {
+    color: hsl(var(--destructive));
+    border-color: hsl(var(--destructive) / 0.4);
+    background: hsl(var(--destructive) / 0.1);
+  }
+
+  .sentinel-lockdown {
+    color: hsl(var(--tamv-purple));
+    border-color: hsl(var(--tamv-purple) / 0.4);
+    background: hsl(var(--tamv-purple) / 0.12);
+    animation: pulse 1.5s infinite;
   }
 }
 
 @layer utilities {
   /* Animation Utilities */
   .animate-glow-pulse {
-    animation: glow-pulse 2s ease-in-out infinite;
+    animation: glow-pulse 2.5s ease-in-out infinite;
   }
 
   .animate-float {
@@ -382,20 +419,20 @@
 @keyframes glow-pulse {
   0%, 100% {
     box-shadow: 
-      0 0 15px hsl(var(--tamv-gold) / 0.5),
-      0 0 30px hsl(var(--tamv-gold) / 0.3),
-      0 0 45px hsl(var(--tamv-gold-light) / 0.2);
+      0 0 12px hsl(var(--tamv-silver) / 0.35),
+      0 0 25px hsl(var(--tamv-silver) / 0.2),
+      0 0 40px hsl(var(--tamv-silver-light) / 0.1);
   }
   50% {
     box-shadow: 
-      0 0 25px hsl(var(--tamv-gold) / 0.7),
-      0 0 50px hsl(var(--tamv-gold) / 0.5),
-      0 0 75px hsl(var(--tamv-gold-light) / 0.3),
-      0 0 100px hsl(var(--tamv-gold) / 0.2);
+      0 0 20px hsl(var(--tamv-silver) / 0.5),
+      0 0 40px hsl(var(--tamv-silver) / 0.3),
+      0 0 60px hsl(var(--tamv-silver-light) / 0.2),
+      0 0 80px hsl(var(--tamv-silver) / 0.1);
   }
 }
 
-@keyframes gold-shimmer-sweep {
+@keyframes silver-shimmer-sweep {
   0% {
     left: -100%;
   }
@@ -404,29 +441,20 @@
   }
 }
 
-@keyframes gold-shine {
-  0%, 100% {
-    opacity: 0.5;
-  }
-  50% {
-    opacity: 1;
-  }
-}
-
 @keyframes float {
   0%, 100% {
     transform: translateY(0);
   }
   50% {
-    transform: translateY(-10px);
+    transform: translateY(-8px);
   }
 }
 
 @keyframes ceremonial-entrance {
   0% {
     opacity: 0;
-    transform: scale(0.9);
-    filter: blur(10px);
+    transform: scale(0.95);
+    filter: blur(8px);
   }
   50% {
     filter: blur(0);
@@ -440,7 +468,7 @@
 @keyframes fade-up {
   0% {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(16px);
   }
   100% {
     opacity: 1;
@@ -451,7 +479,7 @@
 @keyframes slide-in-right {
   0% {
     opacity: 0;
-    transform: translateX(20px);
+    transform: translateX(16px);
   }
   100% {
     opacity: 1;
@@ -482,4 +510,19 @@
 
 .animate-aztec-reveal {
   animation: aztec-reveal 1s ease-out forwards;
+}
+
+/* ECG Monitor Animation */
+@keyframes ecg-line {
+  0% { stroke-dashoffset: 1000; }
+  100% { stroke-dashoffset: 0; }
+}
+
+/* Depth/Parallax Background Effect */
+.tamv-depth-bg {
+  background:
+    radial-gradient(ellipse at 20% 50%, hsl(210 15% 72% / 0.04) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, hsl(186 80% 50% / 0.03) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 80%, hsl(270 60% 55% / 0.02) 0%, transparent 50%),
+    hsl(var(--background));
 }

@@ -10,25 +10,24 @@ import TAMVBackgroundScene from "@/components/three/TAMVBackgroundScene";
 import { useAnalytics } from "@/hooks/useAnalytics";
 import { useNotifications } from "@/hooks/useNotifications";
 import { useGamification } from "@/hooks/useGamification";
+import { useAnubisSecurity } from "@/hooks/useAnubisSecurity";
 
 const WELCOME_SHOWN_KEY = "tamv_welcome_shown";
 
 const Index = () => {
   const [showWelcome, setShowWelcome] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [showTutorials, setShowTutorials] = useState(false);
   
   const { trackPageView } = useAnalytics();
   const { unreadCount } = useNotifications();
   const { userLevel, addXP } = useGamification();
+  const { isDegraded, isLockdown } = useAnubisSecurity();
 
   useEffect(() => {
     const hasSeenWelcome = localStorage.getItem(WELCOME_SHOWN_KEY);
     if (!hasSeenWelcome) {
       setShowWelcome(true);
     }
-    
-    // Track page view
     trackPageView("Home");
   }, [trackPageView]);
 
@@ -39,9 +38,14 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background relative">
+    <div className="min-h-screen bg-background relative tamv-depth-bg">
       {/* 3D Background Scene */}
       <TAMVBackgroundScene />
+
+      {/* Crisis Overlay */}
+      {isDegraded && (
+        <div className="fixed inset-0 z-30 pointer-events-none bg-destructive/5 animate-pulse" />
+      )}
 
       {/* Welcome Animation (first visit only) */}
       {showWelcome && <WelcomeAnimation onComplete={handleWelcomeComplete} />}
@@ -52,7 +56,7 @@ const Index = () => {
       {/* Top Toolbar */}
       <TopToolbar 
         onMenuToggle={() => setSidebarOpen(!sidebarOpen)}
-        onHelpClick={() => setShowTutorials(true)}
+        onHelpClick={() => {}}
         isSidebarOpen={sidebarOpen}
       />
 
@@ -65,11 +69,11 @@ const Index = () => {
       {/* Main Feed */}
       <MainFeed />
 
-      {/* Right Sidebar */}
+      {/* Right Sidebar - Restored with accordion pattern */}
       <RightSidebar />
 
-      {/* Isabella AI Assistant */}
-      <IsabellaAssistantButton />
+      {/* Isabella AI Assistant - hidden during lockdown */}
+      {!isLockdown && <IsabellaAssistantButton />}
     </div>
   );
 };
