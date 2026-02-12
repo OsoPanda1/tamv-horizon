@@ -33,6 +33,16 @@ export const TUTORIAL_LEVEL_STYLES: Record<
   }
 };
 
+export const TUTORIAL_CATEGORIES: Record<string, { name: string; description: string }> = {
+  inicio: { name: "Inicio", description: "Primeros pasos en TAMV" },
+  creacionContenido: { name: "Creación", description: "Crea contenido multimedia" },
+  experiencias: { name: "Experiencias", description: "DreamSpaces y XR" },
+  puentesOniricos: { name: "Puentes", description: "Colaboraciones creativas" },
+  monetizacion: { name: "Monetización", description: "Genera ingresos" },
+  concursos: { name: "Concursos", description: "Retos y competencias" },
+  seguridad: { name: "Seguridad", description: "Protege tu identidad" },
+};
+
 export const VIDEO_TUTORIALS: (VideoTutorial & {
   visualStyle: TutorialVisualStyle;
   cinematicIntro?: boolean;
