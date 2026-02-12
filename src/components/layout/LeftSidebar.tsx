@@ -219,9 +219,9 @@ export default function LeftSidebar({ isOpen = true, onClose }: LeftSidebarProps
                 )}
               >
                 <div className="mt-1 space-y-0.5">
-                  {section.items.map((item) => (
+                  {section.items.map((item, idx) => (
                     <NavLink
-                      key={item.path}
+                      key={item.id || `${section.title}-${item.path}-${idx}`}
                       to={item.path}
                       id={item.id}
                       className={cn(
