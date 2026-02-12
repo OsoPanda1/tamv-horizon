@@ -6,7 +6,8 @@ import { Progress } from "@/components/ui/progress";
 import {
   Home, Compass, Music, Gavel, Sparkles, Users, Radio, PawPrint, 
   Landmark, ChevronDown, ChevronRight, Zap, Trophy, BookOpen, 
-  Settings, FileText, Shield, Vote, X, ChevronLeft, ChevronLeftCircle
+  Settings, FileText, Shield, Vote, X, ChevronLeft,
+  ShoppingBag, Palette, GraduationCap, Headphones, Image, Globe, Ticket
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -34,6 +35,17 @@ const sidebarSections: SidebarSection[] = [
       { icon: Home, label: "Inicio", path: "/" },
       { icon: Compass, label: "Explorar", path: "/explorar" },
       { icon: Zap, label: "Puentes Oníricos", path: "/puentes-oniricos", id: "tamv-puentes" },
+      { icon: Globe, label: "Feed Global", path: "/explorar", badge: "LIVE" },
+    ]
+  },
+  {
+    title: "Social",
+    defaultOpen: true,
+    items: [
+      { icon: Users, label: "Grupos", path: "/grupos" },
+      { icon: Radio, label: "Canales", path: "/canales" },
+      { icon: Image, label: "Reels & Stories", path: "/explorar" },
+      { icon: Headphones, label: "Música", path: "/conciertos" },
     ]
   },
   {
@@ -43,15 +55,16 @@ const sidebarSections: SidebarSection[] = [
       { icon: Music, label: "Conciertos Sensoriales", path: "/conciertos", isLive: true, id: "tamv-experiences" },
       { icon: Sparkles, label: "DreamSpaces", path: "/dreamspaces" },
       { icon: Gavel, label: "Subastas", path: "/subastas", badge: "12" },
+      { icon: Palette, label: "Galerías de Arte", path: "/subastas" },
     ]
   },
   {
-    title: "Comunidad",
-    defaultOpen: true,
+    title: "Marketplace",
+    defaultOpen: false,
     items: [
-      { icon: Users, label: "Grupos", path: "/grupos" },
-      { icon: Radio, label: "Canales", path: "/canales" },
-      { icon: PawPrint, label: "Mascotas Digitales", path: "/mascotas" },
+      { icon: ShoppingBag, label: "Tienda Digital", path: "/subastas" },
+      { icon: PawPrint, label: "Mascotas & CGifts", path: "/mascotas" },
+      { icon: Ticket, label: "Tickets & Eventos", path: "/conciertos" },
     ]
   },
   {
@@ -60,6 +73,14 @@ const sidebarSections: SidebarSection[] = [
     items: [
       { icon: Landmark, label: "Banco TAMV", path: "/banco" },
       { icon: Trophy, label: "Retos y Concursos", path: "/retos", id: "tamv-challenges" },
+    ]
+  },
+  {
+    title: "Aprendizaje",
+    defaultOpen: false,
+    items: [
+      { icon: GraduationCap, label: "Universidad TAMV", path: "/tutoriales" },
+      { icon: BookOpen, label: "Tutoriales", path: "/tutoriales" },
     ]
   },
   {
@@ -72,15 +93,13 @@ const sidebarSections: SidebarSection[] = [
     ]
   },
   {
-    title: "Recursos",
+    title: "Configuración",
     defaultOpen: false,
     items: [
-      { icon: BookOpen, label: "Tutoriales", path: "/tutoriales" },
-      { icon: Settings, label: "Configuración", path: "/configuracion" },
+      { icon: Settings, label: "Ajustes", path: "/configuracion" },
     ]
   }
 ];
-
 interface LeftSidebarProps {
   isOpen?: boolean;
   onClose?: () => void;
