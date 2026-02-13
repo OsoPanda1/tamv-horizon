@@ -1,4 +1,4 @@
-import { Suspense } from "react";
+import { Suspense, lazy } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -8,6 +8,8 @@ import { ModuleLoader, LazyXRExperience, LazyDreamSpaces, LazyDevHub, LazySubast
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
+
+const LazyIsabella = lazy(() => import("./pages/Isabella"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -40,6 +42,7 @@ const App = () => (
           <Route path="/xr" element={<Suspense fallback={<ModuleLoader message="Preparando experiencia XR..." />}><LazyXRExperience /></Suspense>} />
           <Route path="/banco" element={<Suspense fallback={<ModuleLoader message="Cargando Banco TAMV..." />}><LazyBancoTAMV /></Suspense>} />
           <Route path="/tutoriales" element={<Suspense fallback={<ModuleLoader />}><LazyTutorialsHub /></Suspense>} />
+          <Route path="/isabella" element={<Suspense fallback={<ModuleLoader message="Conectando con Isabella..." />}><LazyIsabella /></Suspense>} />
           {/* Redirects for incomplete pages */}
           <Route path="/retos" element={<Navigate to="/explorar" replace />} />
           <Route path="/dao" element={<Navigate to="/dev-hub" replace />} />
