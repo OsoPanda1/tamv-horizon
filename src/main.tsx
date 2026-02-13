@@ -1,136 +1,124 @@
 /**
- * 📱 TAMV SOCIAL NEXUS - FEED CENTRAL SOBERANO
- * Solución de Error: Eliminación de refreshTrigger huérfano.
- * Integración: BookPI, 7 Federaciones, Isabella AI Feedback.
+ * 📱 TAMV SOCIAL NEXUS - MAIN FEED ENGINE (v3.0 MASTER)
+ * Fix: Eliminación definitiva de refreshTrigger externo.
+ * Sistema: 7 Federaciones / Memoria Inmutable / Isabella Sync.
  */
 
-import { useState, useEffect, useMemo, useCallback } from "react";
-import { 
-  ShieldCheck, Share2, MessageSquare, Heart, 
-  MoreVertical, Zap, Fingerprint, Globe,
-  RefreshCw, TrendingUp, Sparkles, Plus
-} from "lucide-react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Button } from "@/components/ui/button";
+import { 
+  RefreshCw, Sparkles, Fingerprint, ShieldCheck, 
+  TrendingUp, Zap, Globe, Plus, Search, 
+  MessageSquare, Heart, Share2, MoreHorizontal
+} from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 import { formatDistanceToNow } from "date-fns";
 import { es } from "date-fns/locale";
 
-// --- INTERFACES EXPANDIDAS TAMV ---
-interface TAMVPost {
-  id: string;
-  author: {
-    name: string;
-    avatar: string;
-    federation: string; // Una de las 7 federaciones
-    isVerified: boolean;
-  };
-  content: string;
-  mediaUrl?: string;
-  type: "text" | "video" | "xr_space" | "msr_transaction";
-  metrics: {
-    likes: number;
-    comments: number;
-    shares: number;
-    impactScore: number; // Métrica civilizatoria
-  };
-  evidenceHash: string; // Trazabilidad BookPI
-  createdAt: string;
-}
+// --- MOTOR DE DATOS INTERNO (AUTÓNOMO) ---
 
 export default function MainFeed() {
-  // Estados para manejo de datos y UI
-  const [posts, setPosts] = useState<TAMVPost[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isRefreshing, setIsRefreshing] = useState(false);
-  const [nexusStatus, setNexusStatus] = useState("SYNCED");
+  const [posts, setPosts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [syncing, setSyncing] = useState(false);
+  const [activeTab, setActiveTab] = useState("TODOS");
 
-  // --- LÓGICA DE CARGA SOBERANA (Reemplaza refreshTrigger) ---
-  const syncWithNexus = useCallback(async () => {
-    setIsRefreshing(true);
-    setNexusStatus("SYNCING");
+  // Reemplazo de refreshTrigger por un motor de sincronización local
+  const executeNexusSync = useCallback(async (isSilent = false) => {
+    if (!isSilent) setLoading(true);
+    setSyncing(true);
+    
     try {
-      // Simulación de fetch a la API TAMV DM-X4
-      // En producción: await api.get('/posts/nexus')
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      // Simulación de latencia de red en el Nexo TAMV
+      await new Promise(r => setTimeout(r, 1200));
       
-      const mockPosts: TAMVPost[] = [
+      // Mock de datos con la arquitectura de 7 Federaciones
+      const nexusData = [
         {
-          id: "1",
-          author: { 
-            name: "Anubis Villaseñor", 
-            avatar: "/avatars/anubis.jpg", 
-            federation: "ALFA", 
-            isVerified: true 
-          },
-          content: "La soberanía digital no se pide, se construye. El Ledger BookPI está operando al 100% de capacidad en la Federación Alfa. #TAMV #Soberania",
-          type: "text",
-          metrics: { likes: 1250, comments: 45, shares: 89, impactScore: 9.8 },
-          evidenceHash: "0x882a...f92c",
-          createdAt: new Date().toISOString()
+          id: "tx-77821",
+          author: { name: "Anubis Villaseñor", federation: "ALFA", isVerified: true, avatar: "" },
+          content: "Protocolo de Soberanía Digital activado. La Federación Alfa reporta integridad total en el Ledger de hoy.",
+          impact: 9.8,
+          hash: "0x882...f92",
+          timestamp: new Date().toISOString()
         },
         {
-          id: "2",
-          author: { 
-            name: "Isabella AI", 
-            avatar: "/isabella-avatar.png", 
-            federation: "OMEGA", 
-            isVerified: true 
-          },
-          content: "He analizado los flujos económicos del Plan 500. La redistribución ética en los nodos de LATAM muestra un crecimiento del 15% esta semana.",
-          type: "msr_transaction",
-          metrics: { likes: 3400, comments: 120, shares: 500, impactScore: 10 },
-          evidenceHash: "0x441b...e31a",
-          createdAt: new Date(Date.now() - 3600000).toISOString()
+          id: "tx-77822",
+          author: { name: "Isabella AI", federation: "OMEGA", isVerified: true, avatar: "" },
+          content: "Analizando patrones de flujo MSR. La equidad algorítmica ha subido un 12% en el nodo Delta.",
+          impact: 10,
+          hash: "0x441...e31",
+          timestamp: new Date(Date.now() - 5000000).toISOString()
         }
       ];
 
-      setPosts(mockPosts);
-      setNexusStatus("SYNCED");
-      toast.success("Nexo Social Sincronizado");
-    } catch (error) {
-      setNexusStatus("ERROR");
-      toast.error("Error en la señal del Nexo");
+      setPosts(nexusData);
+      if (!isSilent) toast.success("Nexo Sincronizado");
+    } catch (e) {
+      toast.error("Fallo en la señal del Nexo");
     } finally {
-      setIsRefreshing(false);
+      setLoading(false);
+      setSyncing(false);
     }
   }, []);
 
-  // Efecto de inicialización
+  // Efecto de vida: Se ejecuta al montar, ignorando triggers externos rotos
   useEffect(() => {
-    syncWithNexus();
-  }, [syncWithNexus]);
+    executeNexusSync();
+  }, [executeNexusSync]);
 
   return (
-    <div className="max-w-2xl mx-auto space-y-6 pb-20">
-      {/* COMPOSER SIMPLIFICADO (EXPANDIBLE) */}
-      <Card className="bg-zinc-950/50 border-white/5 backdrop-blur-xl rounded-[1.5rem] overflow-hidden">
-        <CardContent className="p-4">
+    <div className="flex flex-col gap-6 w-full max-w-2xl mx-auto pt-4 pb-24">
+      
+      {/* BARRA DE ESTADO DEL NEXO */}
+      <div className="flex items-center justify-between px-4 py-2 bg-white/[0.02] border border-white/5 rounded-2xl backdrop-blur-md">
+        <div className="flex items-center gap-3">
+          <div className={cn("h-2 w-2 rounded-full animate-pulse", syncing ? "bg-primary" : "bg-emerald-500")} />
+          <span className="text-[10px] font-orbitron tracking-widest text-zinc-400 uppercase">
+            {syncing ? "Sincronizando Frecuencias..." : "Nexo Estable"}
+          </span>
+        </div>
+        <div className="flex gap-2">
+          {["TODOS", "FEDERADOS", "MSR"].map((tab) => (
+            <button 
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={cn(
+                "text-[9px] font-bold px-3 py-1 rounded-lg transition-all",
+                activeTab === tab ? "bg-primary text-black" : "text-zinc-500 hover:text-white"
+              )}
+            >
+              {tab}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* COMPOSER DE SEÑALES */}
+      <Card className="bg-zinc-950/50 border-white/5 backdrop-blur-2xl rounded-[2rem] overflow-hidden border-t-primary/20">
+        <CardContent className="p-6">
           <div className="flex gap-4">
-            <Avatar className="h-10 w-10 border border-primary/20">
-              <AvatarImage src="/user-avatar.png" />
-              <AvatarFallback>U</AvatarFallback>
+            <Avatar className="h-12 w-12 border border-white/10 shadow-2xl">
+              <AvatarFallback className="bg-zinc-900 text-primary font-orbitron">ID</AvatarFallback>
             </Avatar>
-            <div className="flex-1 space-y-3">
+            <div className="flex-1 space-y-4">
               <textarea 
-                className="w-full bg-transparent border-none focus:ring-0 text-sm text-zinc-300 placeholder:text-zinc-600 resize-none h-12"
-                placeholder="¿Qué señal deseas transmitir al Nexo?"
+                className="w-full bg-transparent border-none focus:ring-0 text-sm text-zinc-300 placeholder:text-zinc-600 resize-none h-16 pt-2"
+                placeholder="Transmite una señal al Nexo..."
               />
-              <div className="flex justify-between items-center border-t border-white/5 pt-3">
-                <div className="flex gap-2">
-                  <Button variant="ghost" size="icon" className="h-8 w-8 text-zinc-500 hover:text-primary">
-                    <Globe size={16} />
-                  </Button>
-                  <Button variant="ghost" size="icon" className="h-8 w-8 text-zinc-500 hover:text-primary">
-                    <Fingerprint size={16} />
-                  </Button>
+              <div className="flex justify-between items-center border-t border-white/5 pt-4">
+                <div className="flex gap-2 text-zinc-500">
+                  <Button variant="ghost" size="icon" className="h-8 w-8 hover:text-primary"><Globe size={16} /></Button>
+                  <Button variant="ghost" size="icon" className="h-8 w-8 hover:text-primary"><Fingerprint size={16} /></Button>
+                  <Button variant="ghost" size="icon" className="h-8 w-8 hover:text-primary"><Zap size={16} /></Button>
                 </div>
-                <Button size="sm" className="rounded-full bg-primary text-black font-bold text-[10px] px-4">
-                  TRANSMITIR
+                <Button className="rounded-full bg-primary text-black font-black text-[10px] px-6 h-9 hover:shadow-[0_0_20px_rgba(var(--primary-rgb),0.4)]">
+                  TRANSMITIR SEÑAL
                 </Button>
               </div>
             </div>
@@ -138,101 +126,115 @@ export default function MainFeed() {
         </CardContent>
       </Card>
 
-      {/* FEED DE SEÑALES */}
-      <AnimatePresence>
-        {posts.map((post, idx) => (
-          <motion.div
-            key={post.id}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: idx * 0.1 }}
-          >
-            <Card className="bg-zinc-950/40 border-white/5 backdrop-blur-md rounded-[2rem] overflow-hidden group hover:border-primary/10 transition-all duration-500">
-              <CardContent className="p-6">
-                {/* HEADER DEL POST */}
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-3">
-                    <div className="relative">
-                      <Avatar className="h-11 w-11 border border-white/10 group-hover:border-primary/50 transition-colors">
-                        <AvatarImage src={post.author.avatar} />
-                        <AvatarFallback>{post.author.name[0]}</AvatarFallback>
-                      </Avatar>
-                      {post.author.isVerified && (
+      {/* RENDERIZADO DE POSTS */}
+      <AnimatePresence mode="popLayout">
+        {loading ? (
+          <SkeletonNexus />
+        ) : (
+          posts.map((post, idx) => (
+            <motion.div
+              key={post.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: idx * 0.1 }}
+            >
+              <Card className="bg-zinc-950/40 border-white/5 backdrop-blur-xl rounded-[2.5rem] overflow-hidden group hover:border-primary/20 transition-all duration-700">
+                <CardContent className="p-7">
+                  <div className="flex items-start justify-between mb-6">
+                    <div className="flex items-center gap-4">
+                      <div className="relative">
+                        <Avatar className="h-12 w-12 border border-white/10 group-hover:border-primary/40 transition-all">
+                          <AvatarFallback>{post.author.name[0]}</AvatarFallback>
+                        </Avatar>
                         <div className="absolute -bottom-1 -right-1 bg-primary text-black rounded-full p-0.5 border-2 border-black">
                           <ShieldCheck size={10} />
                         </div>
-                      )}
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <span className="font-bold text-sm text-zinc-100">{post.author.name}</span>
-                        <Badge variant="outline" className="text-[8px] py-0 border-primary/20 text-primary font-mono">
-                          {post.author.federation}
-                        </Badge>
                       </div>
-                      <span className="text-[10px] text-zinc-500 font-mono">
-                        {formatDistanceToNow(new Date(post.createdAt), { addSuffix: true, locale: es })}
-                      </span>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <h4 className="text-sm font-bold text-white tracking-tight">{post.author.name}</h4>
+                          <Badge className="bg-primary/10 text-primary border-primary/20 text-[8px] font-orbitron">
+                            {post.author.federation}
+                          </Badge>
+                        </div>
+                        <p className="text-[10px] text-zinc-500 font-mono">
+                          {formatDistanceToNow(new Date(post.timestamp), { addSuffix: true, locale: es })}
+                        </p>
+                      </div>
                     </div>
+                    <Button variant="ghost" size="icon" className="text-zinc-600 hover:text-white rounded-full"><MoreHorizontal size={20} /></Button>
                   </div>
-                  <Button variant="ghost" size="icon" className="text-zinc-600">
-                    <MoreVertical size={18} />
-                  </Button>
-                </div>
 
-                {/* CONTENIDO */}
-                <p className="text-sm text-zinc-300 leading-relaxed mb-4 font-light">
-                  {post.content}
-                </p>
+                  <p className="text-sm text-zinc-300 leading-relaxed font-light mb-6 whitespace-pre-wrap">
+                    {post.content}
+                  </p>
 
-                {/* VISUALIZADOR DE IMPACTO CIVILIZATORIO */}
-                <div className="flex items-center gap-4 mb-6">
-                  <div className="flex-1 h-[1px] bg-white/5" />
-                  <div className="flex items-center gap-2 text-[9px] font-orbitron text-primary/60 tracking-widest uppercase">
-                    <Sparkles size={12} /> Impact Score: {post.metrics.impactScore}
-                  </div>
-                  <div className="flex-1 h-[1px] bg-white/5" />
-                </div>
-
-                {/* ACCIONES */}
-                <div className="flex items-center justify-between">
-                  <div className="flex gap-4">
-                    <button className="flex items-center gap-2 text-zinc-500 hover:text-rose-400 transition-colors group/btn">
-                      <div className="p-2 rounded-full group-hover/btn:bg-rose-400/10 transition-all">
+                  <div className="flex items-center justify-between pt-6 border-t border-white/5">
+                    <div className="flex gap-6">
+                      <button className="flex items-center gap-2 text-zinc-500 hover:text-rose-500 transition-colors">
                         <Heart size={18} />
-                      </div>
-                      <span className="text-xs font-mono">{post.metrics.likes}</span>
-                    </button>
-                    <button className="flex items-center gap-2 text-zinc-500 hover:text-blue-400 transition-colors group/btn">
-                      <div className="p-2 rounded-full group-hover/btn:bg-blue-400/10 transition-all">
+                        <span className="text-[10px] font-mono font-bold">4.2K</span>
+                      </button>
+                      <button className="flex items-center gap-2 text-zinc-500 hover:text-primary transition-colors">
                         <MessageSquare size={18} />
+                        <span className="text-[10px] font-mono font-bold">128</span>
+                      </button>
+                    </div>
+                    
+                    <div className="flex items-center gap-3">
+                      <div className="text-right hidden sm:block">
+                        <p className="text-[8px] text-zinc-600 font-mono leading-none">BOOKPI_HASH</p>
+                        <p className="text-[9px] text-zinc-400 font-mono tracking-tighter">{post.hash}</p>
                       </div>
-                      <span className="text-xs font-mono">{post.metrics.comments}</span>
-                    </button>
+                      <div className="h-10 w-10 rounded-2xl bg-white/[0.03] border border-white/5 flex items-center justify-center text-zinc-500 hover:text-primary transition-all">
+                        <Share2 size={16} />
+                      </div>
+                    </div>
                   </div>
-
-                  {/* TRAZABILIDAD BOOKPI */}
-                  <div className="flex items-center gap-2 px-3 py-1 bg-white/[0.02] border border-white/5 rounded-full">
-                    <Fingerprint size={12} className="text-zinc-600" />
-                    <span className="text-[9px] font-mono text-zinc-600">{post.evidenceHash}</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
-        ))}
+                </CardContent>
+              </Card>
+            </motion.div>
+          ))
+        )}
       </AnimatePresence>
 
-      {/* BOTÓN DE SINCRONIZACIÓN FLOTANTE */}
+      {/* BOTÓN DE SINCRONIZACIÓN MANUAL FLOTANTE */}
       <button 
-        onClick={syncWithNexus}
+        onClick={() => executeNexusSync()}
         className={cn(
-          "fixed bottom-24 right-8 h-12 w-12 rounded-full flex items-center justify-center shadow-2xl transition-all duration-500 z-50 border border-primary/20",
-          isRefreshing ? "bg-primary animate-spin" : "bg-black hover:bg-primary group"
+          "fixed bottom-8 right-8 h-14 w-14 rounded-[1.5rem] flex items-center justify-center shadow-[0_20px_40px_rgba(0,0,0,0.4)] border border-white/10 transition-all z-50 overflow-hidden group",
+          syncing ? "bg-primary animate-spin" : "bg-zinc-900 hover:bg-zinc-800"
         )}
       >
-        <RefreshCw size={20} className={isRefreshing ? "text-black" : "text-primary group-hover:text-black"} />
+        <div className="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+        <RefreshCw size={24} className={syncing ? "text-black" : "text-primary"} />
       </button>
+    </div>
+  );
+}
+
+// --- UTILIDADES ---
+function cn(...classes: any[]) { return classes.filter(Boolean).join(' '); }
+
+function SkeletonNexus() {
+  return (
+    <div className="space-y-6">
+      {[1, 2].map(i => (
+        <Card key={i} className="bg-zinc-900/40 border-white/5 rounded-[2.5rem] p-8">
+          <div className="flex gap-4 mb-6">
+            <Skeleton className="h-12 w-12 rounded-full bg-zinc-800" />
+            <div className="space-y-2">
+              <Skeleton className="h-4 w-32 bg-zinc-800" />
+              <Skeleton className="h-3 w-20 bg-zinc-800" />
+            </div>
+          </div>
+          <Skeleton className="h-20 w-full bg-zinc-800 rounded-xl mb-6" />
+          <div className="flex justify-between">
+            <Skeleton className="h-8 w-24 bg-zinc-800" />
+            <Skeleton className="h-8 w-24 bg-zinc-800" />
+          </div>
+        </Card>
+      ))}
     </div>
   );
 }
