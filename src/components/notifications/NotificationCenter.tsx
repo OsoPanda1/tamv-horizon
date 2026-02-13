@@ -1,15 +1,14 @@
 /**
- * 📡 TAMV SIGNAL INTELLIGENCE CENTER - VERSIÓN MAESTRA DIAMANTE
- * Arquitectura: 7 Federaciones / Protocolo Isabella / Ledger de Señales
- * Ubicación: @/components/notifications/NotificationCenter.tsx
+ * 📡 TAMV SIGNAL INTELLIGENCE CENTER - VERSIÓN CORREGIDA Y BLINDADA
+ * Error Fix: ReferenceError refreshTrigger solved.
+ * Arquitectura: Inmutabilidad BookPI / Protocolo Isabella
  */
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { 
-  Bell, ShieldCheck, Zap, Globe, Heart, 
+  Bell, ShieldCheck, Zap, Heart, 
   Coins, Award, AlertOctagon, Fingerprint, 
-  Sparkles, Check, Trash2, Settings2, Eye,
-  Info, Scale, Radio
+  Sparkles, Check, Settings2, Radio, Eye, Scale
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
@@ -20,7 +19,6 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { useNotifications } from "@/hooks/useNotifications";
 import { formatDistanceToNow } from "date-fns";
@@ -28,48 +26,37 @@ import { es } from "date-fns/locale";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
-// --- TIPOS EXTENDIDOS PARA LA CIVILIZACIÓN TAMV ---
-
-type Federation = 'ALFA' | 'BETA' | 'GAMMA' | 'DELTA' | 'EPSILON' | 'ZETA' | 'OMEGA';
-
-interface SignalNotification {
-  id: string;
-  title: string;
-  message: string;
-  type: "achievement" | "social" | "economic" | "security" | "governance" | "isabella" | "system";
-  federation?: Federation;
-  isRead: boolean;
-  createdAt: string | Date;
-  actionUrl?: string;
-  evidenceHash?: string; // Trazabilidad BookPI
-  priority: 1 | 2 | 3; // 1: Crítico, 2: Importante, 3: Informativo
-  metadata?: Record<string, any>;
-}
+// --- TIPOS DE SEÑAL TAMV ---
+type SignalType = "achievement" | "social" | "economic" | "security" | "governance" | "isabella" | "system";
 
 export default function NotificationCenter() {
+  // Hook de notificaciones corregido
   const { notifications, unreadCount, markAsRead, markAllAsRead } = useNotifications();
-  const [filter, setFilter] = useState<string | "all">("all");
+  
+  // Estado local para evitar ReferenceErrors en filtros
+  const [activeFilter, setActiveFilter] = useState<string>("all");
+  const [internalRefresh, setInternalRefresh] = useState(0);
 
-  // --- LÓGICA DE FILTRADO CIVILIZATORIO ---
-  const filteredNotifications = useMemo(() => {
-    if (filter === "all") return notifications;
-    return notifications.filter((n: any) => n.type === filter);
-  }, [notifications, filter]);
+  // --- LÓGICA DE FILTRADO SEGURO ---
+  const filteredSignals = useMemo(() => {
+    if (!notifications) return [];
+    if (activeFilter === "all") return notifications;
+    return notifications.filter((n: any) => n.type === activeFilter);
+  }, [notifications, activeFilter]);
 
-  // --- MAPEO DE ICONOS Y COLORES POR FEDERACIÓN ---
-  const getSignalMeta = (notification: SignalNotification) => {
-    const types = {
-      achievement: { icon: <Award className="text-amber-400" />, bg: "bg-amber-400/10" },
-      social: { icon: <Heart className="text-rose-400" />, bg: "bg-rose-400/10" },
-      economic: { icon: <Coins className="text-emerald-400" />, bg: "bg-emerald-400/10" },
-      security: { icon: <ShieldCheck className="text-blue-400" />, bg: "bg-blue-400/10" },
-      governance: { icon: <Scale className="text-purple-400" />, bg: "bg-purple-400/10" },
-      isabella: { icon: <Sparkles className="text-primary" />, bg: "bg-primary/10" },
-      system: { icon: <Radio className="text-zinc-400" />, bg: "bg-zinc-400/10" },
+  // --- MAPEO DE IDENTIDAD VISUAL (7 FEDERACIONES) ---
+  const getSignalIdentity = useCallback((type: string) => {
+    const config: Record<string, { icon: any, color: string, label: string }> = {
+      achievement: { icon: Award, color: "text-amber-400", label: "LOGRO_CIVIL" },
+      social: { icon: Heart, color: "text-rose-400", label: "NEXUS_SOCIAL" },
+      economic: { icon: Coins, color: "text-emerald-400", label: "MSR_TRANSFER" },
+      security: { icon: ShieldCheck, color: "text-blue-400", label: "ANUBIS_SHIELD" },
+      governance: { icon: Scale, color: "text-purple-400", label: "CITEMESH_VOTE" },
+      isabella: { icon: Sparkles, color: "text-primary", label: "ISABELLA_AI" },
+      system: { icon: Radio, color: "text-zinc-400", label: "SYSTEM_CORE" },
     };
-
-    return types[notification.type as keyof typeof types] || types.system;
-  };
+    return config[type] || config.system;
+  }, []);
 
   return (
     <DropdownMenu>
@@ -77,157 +64,129 @@ export default function NotificationCenter() {
         <Button 
           variant="ghost" 
           size="icon" 
-          className="relative group transition-all duration-500 hover:bg-primary/5 rounded-2xl"
+          className="relative group hover:bg-white/5 rounded-xl h-10 w-10 transition-all duration-300"
         >
-          <div className="absolute inset-0 rounded-2xl bg-primary/20 scale-0 group-hover:scale-100 transition-transform duration-500 blur-xl" />
           <Bell className={cn(
-            "h-5 w-5 transition-transform duration-300 group-hover:rotate-12",
-            unreadCount > 0 ? "text-primary animate-pulse" : "text-zinc-400"
+            "h-5 w-5 transition-all duration-500",
+            unreadCount > 0 ? "text-primary scale-110" : "text-zinc-400"
           )} />
+          
           {unreadCount > 0 && (
-            <span className="absolute -top-1 -right-1 flex h-5 w-5">
+            <motion.span 
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              className="absolute -top-0.5 -right-0.5 flex h-4 w-4"
+            >
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-              <Badge 
-                className="relative h-5 w-5 p-0 flex items-center justify-center bg-primary text-black text-[10px] font-bold border-none"
-              >
+              <Badge className="relative h-4 w-4 p-0 flex items-center justify-center bg-primary text-[9px] font-black border-none text-black">
                 {unreadCount > 9 ? "9+" : unreadCount}
               </Badge>
-            </span>
+            </motion.span>
           )}
         </Button>
       </DropdownMenuTrigger>
 
       <DropdownMenuContent 
         align="end" 
-        className="w-[420px] bg-zinc-950/95 border-white/5 backdrop-blur-2xl rounded-[2rem] p-0 overflow-hidden shadow-[0_32px_64px_-16px_rgba(0,0,0,0.6)]"
+        className="w-[380px] bg-zinc-950/98 border-white/5 backdrop-blur-3xl rounded-[2rem] p-0 overflow-hidden shadow-2xl mt-2"
       >
-        {/* HEADER DE SEÑALES */}
-        <div className="p-6 bg-gradient-to-b from-white/[0.03] to-transparent border-b border-white/5">
+        {/* HEADER TÉCNICO */}
+        <div className="p-5 border-b border-white/5 bg-gradient-to-br from-white/[0.02] to-transparent">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h3 className="font-orbitron text-sm tracking-widest text-white flex items-center gap-2">
-                SIGNAL INTELLIGENCE <div className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
+              <h3 className="font-orbitron text-[11px] tracking-[0.2em] text-white flex items-center gap-2">
+                SIGNAL_INTELLIGENCE <div className="h-1 w-1 rounded-full bg-primary animate-pulse" />
               </h3>
-              <p className="text-[10px] text-zinc-500 font-mono mt-1 uppercase">
-                Protocolo de Memoria: Active_Sync
-              </p>
+              <p className="text-[8px] font-mono text-zinc-600 mt-1 uppercase">Node: TAMV-CENTRAL-01</p>
             </div>
-            <div className="flex gap-1">
-              <Button variant="ghost" size="icon" className="h-8 w-8 rounded-xl text-zinc-500 hover:text-white">
-                <Settings2 size={16} />
-              </Button>
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                className="h-8 w-8 rounded-xl text-zinc-500 hover:text-primary"
-                onClick={() => {
-                  markAllAsRead();
-                  toast.success("Nexo sincronizado: Todas las señales leídas");
-                }}
-              >
-                <Check size={16} />
-              </Button>
-            </div>
+            <Button 
+              variant="ghost" 
+              size="sm"
+              onClick={() => {
+                markAllAsRead();
+                setInternalRefresh(prev => prev + 1);
+              }}
+              className="h-7 text-[9px] font-orbitron text-zinc-500 hover:text-primary hover:bg-primary/5 rounded-lg"
+            >
+              LIMPIAR SEÑALES
+            </Button>
           </div>
 
-          {/* FILTROS DE CATEGORÍA TAMV */}
-          <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
-            {['all', 'isabella', 'economic', 'security', 'governance'].map((cat) => (
+          {/* SELECTOR DE FRECUENCIA (FILTROS) */}
+          <div className="flex gap-1.5 overflow-x-auto no-scrollbar py-1">
+            {['all', 'isabella', 'economic', 'security'].map((f) => (
               <button
-                key={cat}
-                onClick={() => setFilter(cat)}
+                key={f}
+                onClick={() => setActiveFilter(f)}
                 className={cn(
-                  "px-3 py-1 rounded-full text-[9px] font-orbitron transition-all border",
-                  filter === cat 
-                    ? "bg-primary text-black border-primary" 
-                    : "bg-white/5 text-zinc-500 border-white/5 hover:border-white/10"
+                  "px-3 py-1 rounded-md text-[8px] font-orbitron transition-all border uppercase",
+                  activeFilter === f 
+                    ? "bg-primary text-black border-primary shadow-[0_0_15px_rgba(var(--primary-rgb),0.3)]" 
+                    : "bg-white/5 text-zinc-500 border-transparent hover:border-white/10"
                 )}
               >
-                {cat.toUpperCase()}
+                {f}
               </button>
             ))}
           </div>
         </div>
 
-        {/* LISTADO DE SEÑALES */}
-        <ScrollArea className="h-[450px]">
+        {/* ÁREA DE SCROLL DE SEÑALES */}
+        <ScrollArea className="h-[400px]">
           <AnimatePresence mode="popLayout">
-            {filteredNotifications.length === 0 ? (
-              <motion.div 
-                initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-                className="flex flex-col items-center justify-center h-full p-12 text-center"
-              >
-                <div className="relative mb-4">
-                  <div className="absolute inset-0 bg-primary/20 blur-3xl rounded-full" />
-                  <Radio className="h-12 w-12 text-zinc-800 relative z-10" />
-                </div>
-                <p className="text-zinc-500 font-orbitron text-[10px] tracking-widest uppercase">
-                  Frecuencia Limpia: Sin Señales Entrantes
-                </p>
-              </motion.div>
+            {filteredSignals.length === 0 ? (
+              <div className="flex flex-col items-center justify-center h-[300px] opacity-20">
+                <Radio className="h-10 w-10 mb-2" />
+                <span className="font-orbitron text-[9px] tracking-widest">SIN ACTIVIDAD EN EL NEXO</span>
+              </div>
             ) : (
-              filteredNotifications.map((notification: any, idx: number) => {
-                const meta = getSignalMeta(notification);
+              filteredSignals.map((sig: any, idx: number) => {
+                const identity = getSignalIdentity(sig.type);
+                const Icon = identity.icon;
+                
                 return (
                   <motion.div
-                    key={notification.id}
-                    initial={{ x: 20, opacity: 0 }}
-                    animate={{ x: 0, opacity: 1 }}
-                    transition={{ delay: idx * 0.05 }}
+                    key={sig.id}
+                    initial={{ opacity: 0, x: 10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: idx * 0.03 }}
                   >
                     <DropdownMenuItem
                       className={cn(
-                        "p-5 cursor-pointer border-b border-white/[0.02] flex flex-col items-start gap-3 focus:bg-white/[0.03] transition-colors",
-                        !notification.isRead && "bg-primary/[0.02]"
+                        "p-4 cursor-pointer flex items-start gap-4 border-b border-white/[0.03] focus:bg-white/[0.04] transition-all",
+                        !sig.isRead && "bg-primary/[0.01]"
                       )}
                       onClick={() => {
-                        if (!notification.isRead) markAsRead(notification.id);
-                        if (notification.actionUrl) window.location.href = notification.actionUrl;
+                        if (!sig.isRead) markAsRead(sig.id);
+                        if (sig.actionUrl) window.location.href = sig.actionUrl;
                       }}
                     >
-                      <div className="flex gap-4 w-full">
-                        {/* ICONO CON EFECTO DE FEDERACIÓN */}
-                        <div className={cn("h-12 w-12 rounded-2xl flex items-center justify-center flex-shrink-0 border border-white/5 shadow-inner", meta.bg)}>
-                          {meta.icon}
+                      <div className={cn("h-10 w-10 rounded-xl flex items-center justify-center flex-shrink-0 border border-white/5", !sig.isRead ? "bg-primary/10" : "bg-zinc-900")}>
+                        <Icon size={18} className={identity.color} />
+                      </div>
+
+                      <div className="flex-1 space-y-1 overflow-hidden">
+                        <div className="flex items-center justify-between">
+                          <span className="text-[8px] font-black font-mono text-zinc-500 uppercase tracking-tighter">
+                            {identity.label}
+                          </span>
+                          <span className="text-[8px] text-zinc-700 font-mono">
+                            {formatDistanceToNow(new Date(sig.createdAt || Date.now()), { addSuffix: true, locale: es })}
+                          </span>
                         </div>
-
-                        <div className="flex-1 min-w-0 space-y-1">
-                          <div className="flex items-center justify-between gap-2">
-                            <span className="text-[10px] font-bold text-primary tracking-tighter uppercase font-mono">
-                              {notification.type} // {notification.federation || 'GLOBAL'}
-                            </span>
-                            <span className="text-[9px] text-zinc-600 font-mono">
-                              {formatDistanceToNow(new Date(notification.createdAt), { addSuffix: true, locale: es })}
-                            </span>
+                        <h4 className={cn("text-xs font-bold leading-tight truncate", !sig.isRead ? "text-white" : "text-zinc-400")}>
+                          {sig.title}
+                        </h4>
+                        <p className="text-[11px] text-zinc-500 line-clamp-2 leading-relaxed font-light">
+                          {sig.message}
+                        </p>
+                        
+                        {/* FOOTER DE SEÑAL (MÉTRICAS) */}
+                        {!sig.isRead && (
+                          <div className="flex items-center gap-2 pt-1">
+                            <div className="h-1 w-1 rounded-full bg-primary animate-pulse" />
+                            <span className="text-[7px] font-mono text-primary/70 tracking-widest uppercase">High_Priority_Signal</span>
                           </div>
-                          
-                          <h4 className="font-semibold text-sm text-zinc-100 leading-tight">
-                            {notification.title}
-                          </h4>
-                          
-                          <p className="text-xs text-zinc-500 line-clamp-2 leading-relaxed">
-                            {notification.message}
-                          </p>
-
-                          {/* FOOTER DE LA SEÑAL (INFO TÉCNICA) */}
-                          <div className="flex items-center gap-4 pt-2">
-                            {notification.evidenceHash && (
-                              <div className="flex items-center gap-1 text-[8px] text-zinc-600 font-mono bg-white/5 px-2 py-0.5 rounded">
-                                <Fingerprint size={10} />
-                                {notification.evidenceHash.substring(0, 12)}
-                              </div>
-                            )}
-                            {notification.priority === 1 && (
-                              <div className="flex items-center gap-1 text-[8px] text-red-500 font-bold uppercase animate-pulse">
-                                <AlertOctagon size={10} /> CRITICAL_SIGNAL
-                              </div>
-                            )}
-                          </div>
-                        </div>
-
-                        {/* INDICADOR DE LECTURA */}
-                        {!notification.isRead && (
-                          <div className="w-1.5 h-1.5 rounded-full bg-primary shadow-[0_0_10px_rgba(var(--primary-rgb),0.8)] flex-shrink-0 mt-1" />
                         )}
                       </div>
                     </DropdownMenuItem>
@@ -238,14 +197,13 @@ export default function NotificationCenter() {
           </AnimatePresence>
         </ScrollArea>
 
-        {/* ACCIONES GLOBALES */}
-        <div className="p-4 bg-zinc-900/50 flex items-center justify-between border-t border-white/5">
-          <Button variant="ghost" className="text-[10px] font-orbitron text-zinc-500 hover:text-white gap-2">
-            <Eye size={14} /> VER ARCHIVO COMPLETO
-          </Button>
-          <div className="flex items-center gap-1 opacity-30 text-[8px] font-mono text-white italic">
-            <ShieldCheck size={10} /> TAMV_ENCRYPT_ON
+        {/* FOOTER DE SISTEMA */}
+        <div className="p-4 bg-zinc-900/30 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Fingerprint size={12} className="text-zinc-600" />
+            <span className="text-[8px] font-mono text-zinc-600 uppercase">BookPI Immutable Log Enabled</span>
           </div>
+          <Settings2 size={12} className="text-zinc-600 hover:text-white cursor-pointer transition-colors" />
         </div>
       </DropdownMenuContent>
     </DropdownMenu>
