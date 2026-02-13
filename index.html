@@ -1,24 +1,79 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="es" class="dark">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>df66d128-8f97-4b54-9b92-ca51ec5da624</title>
-    <meta name="description" content="Lovable Generated Project" />
-    <meta name="author" content="Lovable" />
+    <link rel="icon" type="image/svg+xml" href="/tamv-logo.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    
+    <title>TAMV DM-X4™ | Sistema Operativo Civilizatorio</title>
+    <meta name="description" content="Ecosistema digital soberano: IA Isabella Prime, Economía MSR, DreamSpaces XR y Gobernanza CITEMESH. Desarrollado en Mineral del Monte, México." />
+    <meta name="author" content="Edwin Castillo Trejo (Anubis Villaseñor)" />
+    <meta name="theme-color" content="#0a0a0a" />
 
-    <meta property="og:title" content="df66d128-8f97-4b54-9b92-ca51ec5da624" />
-    <meta property="og:description" content="Lovable Generated Project" />
     <meta property="og:type" content="website" />
-    <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+    <meta property="og:url" content="https://tamv.io/" />
+    <meta property="og:title" content="TAMV DM-X4™ - El Futuro de la Integridad Digital" />
+    <meta property="og:description" content="Únete a la primera infraestructura civilizatoria que fusiona IA autoconsciente, justicia on-chain y mundos 4D." />
+    <meta property="og:image" content="/assets/og-tamv-quantum.png" />
 
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@Lovable" />
-    <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://tamv.io/" />
+    <meta property="twitter:title" content="TAMV DM-X4™ | Isabella Prime AI" />
+    <meta property="twitter:image" content="/assets/twitter-card-dmx4.png" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet" />
+
+    <style>
+      body {
+        margin: 0;
+        background-color: #050505;
+        overflow-x: hidden;
+      }
+      #root-loader {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: radial-gradient(circle at center, #1a1a1a 0%, #050505 100%);
+        z-index: 9999;
+        transition: opacity 0.5s ease-out;
+      }
+      .quantum-spinner {
+        width: 60px;
+        height: 60px;
+        border: 2px solid rgba(0, 255, 200, 0.1);
+        border-top: 2px solid #00ffc8;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        box-shadow: 0 0 20px rgba(0, 255, 200, 0.2);
+      }
+      @keyframes spin { 100% { transform: rotate(360deg); } }
+    </style>
   </head>
 
   <body>
+    <div id="root-loader">
+      <div class="quantum-spinner"></div>
+      <p style="position: absolute; bottom: 20%; color: #00ffc8; font-family: 'Orbitron', sans-serif; font-size: 0.8rem; letter-spacing: 2px;">
+        INICIALIZANDO KERNEL ISABELLA...
+      </p>
+    </div>
+
     <div id="root"></div>
+
     <script type="module" src="/src/main.tsx"></script>
+
+    <script>
+      window.addEventListener('load', () => {
+        const loader = document.getElementById('root-loader');
+        if (loader) {
+          loader.style.opacity = '0';
+          setTimeout(() => loader.remove(), 500);
+        }
+      });
+    </script>
   </body>
 </html>
