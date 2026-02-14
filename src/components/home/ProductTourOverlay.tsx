@@ -27,7 +27,7 @@ export default function ProductTourOverlay({ onComplete }: ProductTourOverlayPro
       // Small delay to let the UI render first
       setTimeout(() => {
         setTourState(startTour());
-      }, 1500);
+      }, 1200);
     }
   }, []);
 
@@ -91,7 +91,7 @@ export default function ProductTourOverlay({ onComplete }: ProductTourOverlayPro
       case "bottom":
         return {
           top: `${targetRect.bottom + padding}px`,
-          left: `${Math.max(padding, Math.min(targetRect.left + targetRect.width / 2 - tooltipWidth / 2, window.innerWidth - tooltipWidth - padding))}px`
+          left: `${Math.max(padding, Math.min(targetRect.left + targetRect.width / 4 - tooltipWidth / 4, window.innerWidth - tooltipWidth - padding))}px`
         };
       case "top":
         return {
@@ -114,7 +114,7 @@ export default function ProductTourOverlay({ onComplete }: ProductTourOverlayPro
   };
 
   return (
-    <div className="fixed inset-0 z-[100]">
+    <div className="fixed inset-0 z-[80]">
       {/* Dark overlay with hole for target element */}
       <div className="absolute inset-0 bg-background/90" />
       
@@ -125,8 +125,8 @@ export default function ProductTourOverlay({ onComplete }: ProductTourOverlayPro
           style={{
             top: targetRect.top - 4,
             left: targetRect.left - 4,
-            width: targetRect.width + 8,
-            height: targetRect.height + 8,
+            width: targetRect.width + 10,
+            height: targetRect.height + 10,
             boxShadow: "0 0 0 9999px rgba(0, 0, 0, 0.8)"
           }}
         />
