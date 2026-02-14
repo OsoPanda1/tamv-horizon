@@ -44,11 +44,11 @@ export const TAMV_TOUR_STEPS: ProductTourStep[] = [
     position: "left"
   },
   {
-    id: "isabella",
-    targetSelector: "#tamv-isabella",
-    title: "Isabella IA",
-    description: "Tu asistente creativa personal. Isabella te ayuda a crear, conectar y descubrir oportunidades.",
-    position: "top center"
+    id: "grupos",
+    targetSelector: "#tamv-grupos",
+    title: "grupos sociales",
+    description: "Crea grupos sociales y conecta con tu comunidad.",
+    position: "left"
   }
 ];
 
