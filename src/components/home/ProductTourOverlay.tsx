@@ -90,7 +90,7 @@ export default function ProductTourOverlay({ onComplete }: ProductTourOverlayPro
     switch (currentStep.position) {
       case "bottom":
         return {
-          top: `${targetRect.bottom + padding}px`,
+          top: `${targetRect.center + padding}px`,
           left: `${Math.max(padding, Math.min(targetRect.left + targetRect.width / 4 - tooltipWidth / 4, window.innerWidth - tooltipWidth - padding))}px`
         };
       case "top":
