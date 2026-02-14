@@ -28,7 +28,7 @@ function MatrixRainCanvas() {
     window.addEventListener("resize", resize);
 
     const draw = () => {
-      ctx.fillStyle = "rgba(2, 6, 23, 0.06)";
+      ctx.fillStyle = "rgba(5, 12, 30, 0.06)";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       for (let i = 0; i < drops.length; i++) {
@@ -36,16 +36,16 @@ function MatrixRainCanvas() {
         const x = i * fontSize;
         const y = drops[i] * fontSize;
 
-        // Gradient from cyan to silver
+        // Gradient from metallic blue to ivory
         const brightness = Math.random();
         if (brightness > 0.95) {
-          ctx.fillStyle = "rgba(255, 255, 255, 0.9)";
+          ctx.fillStyle = "rgba(230, 220, 200, 0.9)";
           ctx.font = `bold ${fontSize}px monospace`;
         } else if (brightness > 0.7) {
-          ctx.fillStyle = "rgba(0, 255, 200, 0.8)";
+          ctx.fillStyle = "rgba(80, 140, 220, 0.8)";
           ctx.font = `${fontSize}px monospace`;
         } else {
-          ctx.fillStyle = "rgba(0, 200, 180, 0.3)";
+          ctx.fillStyle = "rgba(60, 120, 200, 0.3)";
           ctx.font = `${fontSize}px monospace`;
         }
 

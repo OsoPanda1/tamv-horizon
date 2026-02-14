@@ -216,7 +216,7 @@ export const TAMVMonitor: React.FC<TAMVMonitorProps> = ({
             <CartesianGrid vertical={false} stroke="rgba(255,255,255,0.03)" strokeDasharray="5 5" />
             <XAxis 
               dataKey="time" 
-              hide={size < 400} 
+              hide 
               axisLine={false} 
               tickLine={false} 
               tick={{ fontSize: 9, fill: "#666", fontFamily: "monospace" }} 
@@ -319,14 +319,7 @@ export const TAMVMonitor: React.FC<TAMVMonitorProps> = ({
       </div>
 
       {/* Estilos Globales para Recharts en el Ecosistema */}
-      <style jsx global>{`
-        .recharts-area-path {
-          filter: drop-shadow(0 0 10px ${currentPattern.color}44);
-        }
-        .recharts-cartesian-grid-horizontal line {
-          stroke-dasharray: 10 10;
-        }
-      `}</style>
+      {/* Styles applied via className instead of jsx style tag */}
     </motion.div>
   );
 };

@@ -136,18 +136,7 @@ export default function RecommendedCarousel() {
         ))}
       </div>
 
-      <style jsx>{`
-        .mask-fade-edges {
-          mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
-        }
-        @keyframes scan {
-          from { transform: translateX(-100%); }
-          to { transform: translateX(100%); }
-        }
-        .animate-scan {
-          animation: scan 2s linear infinite;
-        }
-      `}</style>
+      {/* Styles handled via Tailwind */}
     </section>
   );
 }
