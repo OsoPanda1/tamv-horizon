@@ -37,7 +37,7 @@ export const useTAMVTracker = (
         module: currentModule,
         action,
         impact: { credits: impactCredits, socialIndex: 0.1 },
-        ecgContext: { pattern, intensity, sessionDuration: duration },
+        ecgContext: { pattern, intensity, sessionDuration: duration, neuralSync: Math.random() },
         metadata: {},
       };
 

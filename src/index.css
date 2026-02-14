@@ -8,63 +8,66 @@
 
 @layer base {
   :root {
-    /* Base colors - Deep space background */
-    --background: 222 47% 4%;
-    --foreground: 210 20% 92%;
+    /* Base colors - Deep midnight blue */
+    --background: 220 40% 4%;
+    --foreground: 40 20% 92%;
 
     /* Card surfaces */
-    --card: 222 40% 7%;
-    --card-foreground: 210 20% 92%;
+    --card: 220 35% 7%;
+    --card-foreground: 40 20% 92%;
 
     /* Popover */
-    --popover: 222 40% 6%;
-    --popover-foreground: 210 20% 92%;
+    --popover: 220 35% 6%;
+    --popover-foreground: 40 20% 92%;
 
-    /* Primary - Silver Hiperrealista TAMV */
-    --primary: 210 15% 72%;
-    --primary-foreground: 222 47% 4%;
+    /* Primary - Metallic Blue TAMV */
+    --primary: 215 70% 55%;
+    --primary-foreground: 40 30% 95%;
 
-    /* Secondary - Deep Obsidian */
-    --secondary: 217 33% 12%;
-    --secondary-foreground: 210 20% 92%;
+    /* Secondary - Deep Steel */
+    --secondary: 218 30% 12%;
+    --secondary-foreground: 40 20% 92%;
 
     /* Muted */
-    --muted: 217 25% 14%;
+    --muted: 218 22% 14%;
     --muted-foreground: 215 15% 55%;
 
-    /* Accent - Cyan Neon */
-    --accent: 186 80% 50%;
-    --accent-foreground: 222 47% 4%;
+    /* Accent - Ivory Gold */
+    --accent: 38 60% 70%;
+    --accent-foreground: 220 40% 4%;
 
     /* Destructive */
     --destructive: 0 72% 55%;
-    --destructive-foreground: 210 20% 95%;
+    --destructive-foreground: 40 20% 95%;
 
     /* Border & Input */
-    --border: 217 20% 20%;
-    --input: 217 25% 14%;
-    --ring: 210 15% 72%;
+    --border: 218 20% 18%;
+    --input: 218 22% 14%;
+    --ring: 215 70% 55%;
 
     --radius: 0.75rem;
 
     /* Sidebar */
-    --sidebar-background: 222 42% 5%;
-    --sidebar-foreground: 210 15% 85%;
-    --sidebar-primary: 210 15% 72%;
-    --sidebar-primary-foreground: 222 47% 4%;
-    --sidebar-accent: 186 80% 50%;
-    --sidebar-accent-foreground: 222 47% 4%;
-    --sidebar-border: 217 20% 16%;
-    --sidebar-ring: 210 15% 72%;
+    --sidebar-background: 220 38% 5%;
+    --sidebar-foreground: 40 15% 85%;
+    --sidebar-primary: 215 70% 55%;
+    --sidebar-primary-foreground: 40 30% 95%;
+    --sidebar-accent: 38 60% 70%;
+    --sidebar-accent-foreground: 220 40% 4%;
+    --sidebar-border: 218 20% 16%;
+    --sidebar-ring: 215 70% 55%;
 
-    /* TAMV Custom Tokens - Platinum Silver Hiperrealista */
+    /* TAMV Custom Tokens - Metallic Blue & Ivory */
+    --tamv-blue: 215 70% 55%;
+    --tamv-blue-light: 215 65% 68%;
+    --tamv-blue-bright: 215 75% 78%;
+    --tamv-blue-dark: 215 60% 40%;
+    --tamv-blue-deep: 218 55% 30%;
+    --tamv-blue-glow: 215 80% 65%;
+    --tamv-ivory: 38 60% 70%;
+    --tamv-ivory-light: 38 50% 85%;
+    --tamv-ivory-cream: 40 40% 92%;
     --tamv-silver: 210 15% 72%;
-    --tamv-silver-light: 210 18% 82%;
-    --tamv-silver-bright: 210 20% 90%;
-    --tamv-silver-dark: 210 12% 55%;
-    --tamv-silver-deep: 210 10% 42%;
-    --tamv-silver-glow: 210 20% 78%;
-    --tamv-silver-shine: 210 25% 88%;
     --tamv-cyan: 186 80% 50%;
     --tamv-cyan-glow: 186 90% 65%;
     --tamv-purple: 270 60% 55%;
@@ -138,25 +141,25 @@
   }
 
   .dark {
-    --background: 222 47% 4%;
-    --foreground: 210 20% 92%;
-    --card: 222 40% 7%;
-    --card-foreground: 210 20% 92%;
-    --popover: 222 40% 6%;
-    --popover-foreground: 210 20% 92%;
-    --primary: 210 15% 72%;
-    --primary-foreground: 222 47% 4%;
-    --secondary: 217 33% 12%;
-    --secondary-foreground: 210 20% 92%;
-    --muted: 217 25% 14%;
+    --background: 220 40% 4%;
+    --foreground: 40 20% 92%;
+    --card: 220 35% 7%;
+    --card-foreground: 40 20% 92%;
+    --popover: 220 35% 6%;
+    --popover-foreground: 40 20% 92%;
+    --primary: 215 70% 55%;
+    --primary-foreground: 40 30% 95%;
+    --secondary: 218 30% 12%;
+    --secondary-foreground: 40 20% 92%;
+    --muted: 218 22% 14%;
     --muted-foreground: 215 15% 55%;
-    --accent: 186 80% 50%;
-    --accent-foreground: 222 47% 4%;
+    --accent: 38 60% 70%;
+    --accent-foreground: 220 40% 4%;
     --destructive: 0 72% 55%;
-    --destructive-foreground: 210 20% 95%;
-    --border: 217 20% 20%;
-    --input: 217 25% 14%;
-    --ring: 210 15% 72%;
+    --destructive-foreground: 40 20% 95%;
+    --border: 218 20% 18%;
+    --input: 218 22% 14%;
+    --ring: 215 70% 55%;
   }
 }
 

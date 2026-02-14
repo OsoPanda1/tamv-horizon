@@ -20,7 +20,7 @@ const SUBSYSTEMS = ["MSR-Core", "Anubis-Sentinel", "Isabella-Kernel", "Citemesh-
 
 function CinematicIntro({ onComplete }: CinematicIntroProps) {
   const [currentLine, setCurrentLine] = useState(-1);
-  const [phase, setPhase] = useState<"dark" | "reveal" | "text" | "logo" | "fade">("dark");
+  const [phase, setPhase] = useState<"dark" | "reveal" | "text" | "dedication" | "logo" | "fade">("dark");
   const [activeSubsystem, setActiveSubsystem] = useState("");
 
   const handleSkip = useCallback(() => {
@@ -29,7 +29,15 @@ function CinematicIntro({ onComplete }: CinematicIntroProps) {
   }, [onComplete]);
 
   useEffect(() => {
-    const timers: NodeJS.Timeout[] = [
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") handleSkip();
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [handleSkip]);
+
+  useEffect(() => {
+    const timers: ReturnType<typeof setTimeout>[] = [
       setTimeout(() => setPhase("reveal"), 500),
       setTimeout(() => { setPhase("text"); setCurrentLine(0); }, 1500),
       ...VOICEOVER_LINES.map((line, i) =>
@@ -38,9 +46,11 @@ function CinematicIntro({ onComplete }: CinematicIntroProps) {
           setActiveSubsystem(SUBSYSTEMS[i % SUBSYSTEMS.length]);
         }, line.delay + 1500)
       ),
-      setTimeout(() => setPhase("logo"), 15000),
-      setTimeout(() => setPhase("fade"), 18000),
-      setTimeout(onComplete, 19500),
+      // Dedication phase
+      setTimeout(() => setPhase("dedication"), 16000),
+      setTimeout(() => setPhase("logo"), 22000),
+      setTimeout(() => setPhase("fade"), 25000),
+      setTimeout(onComplete, 26500),
     ];
     return () => timers.forEach(clearTimeout);
   }, [onComplete]);
@@ -49,41 +59,42 @@ function CinematicIntro({ onComplete }: CinematicIntroProps) {
     <AnimatePresence>
       {phase !== "fade" && (
         <motion.div
-          className="fixed inset-0 z-[500] flex flex-col items-center justify-center bg-black overflow-hidden"
+          className="fixed inset-0 z-[500] flex flex-col items-center justify-center overflow-hidden"
+          style={{ background: "linear-gradient(135deg, hsl(220 40% 3%), hsl(215 50% 6%), hsl(220 40% 3%))" }}
           initial={{ opacity: 1 }}
           exit={{ opacity: 0, filter: "brightness(2) blur(20px)" }}
           transition={{ duration: 1.2, ease: "easeInOut" }}
         >
-          {/* Background con Efecto de Profundidad Cuántica */}
+          {/* Background */}
           <motion.div
             className="absolute inset-0"
             initial={{ scale: 1.5, filter: "grayscale(1) blur(10px)" }}
             animate={{ 
               scale: phase === "logo" ? 1.05 : 1.2, 
-              opacity: phase === "dark" ? 0 : 0.3,
+              opacity: phase === "dark" ? 0 : 0.25,
               filter: phase === "logo" ? "grayscale(0) blur(0px)" : "grayscale(0.8) blur(2px)"
             }}
             transition={{ duration: 10, ease: "linear" }}
           >
             <img src={heroCityscape} alt="" className="w-full h-full object-cover opacity-60" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[hsl(220,40%,3%)] via-transparent to-[hsl(220,40%,3%)]" />
           </motion.div>
 
-          {/* Grid de Datos Isométrico (Capa de Realidad) */}
-          <div className="absolute inset-0 opacity-[0.05] pointer-events-none"
-            style={{ backgroundImage: `linear-gradient(#00ffc8 1px, transparent 1px), linear-gradient(90deg, #00ffc8 1px, transparent 1px)`, backgroundSize: '50px 50px' }}
+          {/* Grid overlay */}
+          <div className="absolute inset-0 opacity-[0.04] pointer-events-none"
+            style={{ backgroundImage: `linear-gradient(hsl(215 70% 55%) 1px, transparent 1px), linear-gradient(90deg, hsl(215 70% 55%) 1px, transparent 1px)`, backgroundSize: '50px 50px' }}
           />
 
-          {/* Monitor de Estado de IA */}
+          {/* Subsystem monitor */}
           <div className="absolute top-10 left-10 hidden md:block">
-            <p className="font-mono text-[10px] text-primary/50 tracking-tighter uppercase">
-              {activeSubsystem} status: <span className="text-primary animate-pulse">Online</span><br />
+            <p className="font-mono text-[10px] tracking-tighter uppercase" style={{ color: "hsl(215 70% 55% / 0.5)" }}>
+              {activeSubsystem} status: <span className="animate-pulse" style={{ color: "hsl(215 70% 55%)" }}>Online</span><br />
               Secure_Handshake: PQC-Kyber-1024<br />
               Latencia_Nexo: 8.4ms
             </p>
           </div>
 
-          {/* Contenedor de Texto Central */}
+          {/* Central content */}
           <div className="relative z-10 text-center px-6 max-w-4xl">
             <AnimatePresence mode="wait">
               {currentLine >= 0 && phase === "text" && (
@@ -95,15 +106,69 @@ function CinematicIntro({ onComplete }: CinematicIntroProps) {
                   transition={{ duration: 0.7, ease: "circOut" }}
                   className="space-y-4"
                 >
-                  <p className="text-3xl md:text-5xl font-bold tracking-tight text-white font-orbitron leading-tight">
+                  <p className="text-3xl md:text-5xl font-bold tracking-tight font-orbitron leading-tight"
+                    style={{ color: "hsl(38 60% 85%)" }}>
                     {VOICEOVER_LINES[currentLine].text}
                   </p>
-                  <div className="h-1 w-24 bg-primary mx-auto rounded-full shadow-[0_0_15px_#00ffc8]" />
+                  <div className="h-1 w-24 mx-auto rounded-full"
+                    style={{ background: "hsl(215 70% 55%)", boxShadow: "0 0 15px hsl(215 70% 55%)" }} />
                 </motion.div>
               )}
             </AnimatePresence>
 
-            {/* Logo Reveal Final (Impacto Civilizatorio) */}
+            {/* DEDICATION - Reina Trejo Serrano */}
+            {phase === "dedication" && (
+              <motion.div
+                initial={{ opacity: 0, y: 60 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 2, ease: [0.16, 1, 0.3, 1] }}
+                className="flex flex-col items-center space-y-8"
+              >
+                <motion.div
+                  animate={{ scale: [1, 1.02, 1] }}
+                  transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                  className="relative"
+                >
+                  <div className="absolute -inset-8 rounded-full opacity-20"
+                    style={{ background: "radial-gradient(circle, hsl(38 60% 70%), transparent 70%)" }} />
+                  <div className="h-1 w-32 mx-auto rounded-full mb-8"
+                    style={{ background: "linear-gradient(90deg, transparent, hsl(38 60% 70%), transparent)" }} />
+                </motion.div>
+
+                <p className="text-lg md:text-2xl font-light italic leading-relaxed max-w-2xl"
+                  style={{ color: "hsl(38 50% 85%)" }}>
+                  "Gracias por jamás darte por vencida.<br />
+                  Quiero decirte que tu esfuerzo valió la pena."
+                </p>
+
+                <div className="space-y-2">
+                  <p className="text-2xl md:text-4xl font-bold font-orbitron tracking-tight"
+                    style={{ color: "hsl(38 60% 80%)" }}>
+                    Te amo, Mamá.
+                  </p>
+                  <p className="text-sm md:text-base tracking-[0.3em] uppercase font-light"
+                    style={{ color: "hsl(215 70% 65%)" }}>
+                    Dedicado a Reina Trejo Serrano
+                  </p>
+                </div>
+
+                <div className="mt-4 space-y-1">
+                  <p className="text-xs tracking-[0.5em] uppercase font-orbitron"
+                    style={{ color: "hsl(215 50% 45%)" }}>
+                    Atte.
+                  </p>
+                  <p className="text-sm tracking-[0.2em] italic"
+                    style={{ color: "hsl(38 40% 65%)" }}>
+                    "Tu Oveja Negra"
+                  </p>
+                </div>
+
+                <div className="h-px w-48 mt-6"
+                  style={{ background: "linear-gradient(90deg, transparent, hsl(38 60% 70% / 0.4), transparent)" }} />
+              </motion.div>
+            )}
+
+            {/* Logo reveal */}
             {phase === "logo" && (
               <motion.div
                 initial={{ opacity: 0, y: 50 }}
@@ -112,39 +177,48 @@ function CinematicIntro({ onComplete }: CinematicIntroProps) {
                 className="flex flex-col items-center"
               >
                 <div className="relative mb-8">
-                    <motion.div 
-                        animate={{ rotate: 360 }}
-                        transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                        className="absolute inset-0 border border-primary/20 rounded-full scale-150" 
-                    />
-                    <img src={tamvLogo} alt="TAMV" className="h-32 md:h-48 w-auto relative z-10 drop-shadow-[0_0_50px_rgba(0,255,200,0.4)]" />
+                  <motion.div 
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                    className="absolute inset-0 rounded-full scale-150"
+                    style={{ border: "1px solid hsl(215 70% 55% / 0.2)" }}
+                  />
+                  <img src={tamvLogo} alt="TAMV" className="h-32 md:h-48 w-auto relative z-10"
+                    style={{ filter: "drop-shadow(0 0 50px hsl(215 70% 55% / 0.4))" }} />
                 </div>
                 
-                <h1 className="text-5xl md:text-8xl font-black font-orbitron bg-gradient-to-b from-white to-gray-500 bg-clip-text text-transparent mb-2">
+                <h1 className="text-5xl md:text-8xl font-black font-orbitron mb-2"
+                  style={{ background: "linear-gradient(180deg, hsl(38 50% 90%), hsl(215 60% 65%))", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
                   TAMV ONLINE
                 </h1>
-                <p className="text-primary tracking-[0.5em] font-light text-sm md:text-xl uppercase opacity-80">
+                <p className="tracking-[0.5em] font-light text-sm md:text-xl uppercase opacity-80"
+                  style={{ color: "hsl(215 70% 55%)" }}>
                   Infraestructura Civilizatoria
                 </p>
               </motion.div>
             )}
           </div>
 
-          {/* Controles de Salto */}
+          {/* Skip button */}
           <button 
             onClick={handleSkip} 
-            className="absolute bottom-12 px-8 py-3 text-[10px] font-orbitron uppercase tracking-widest text-primary/60 hover:text-primary border border-primary/20 hover:border-primary/60 transition-all rounded-sm backdrop-blur-md z-[600]"
+            className="absolute bottom-12 px-8 py-3 text-[10px] font-orbitron uppercase tracking-widest transition-all rounded-sm backdrop-blur-md z-[600]"
+            style={{ 
+              color: "hsl(215 70% 55% / 0.6)", 
+              border: "1px solid hsl(215 70% 55% / 0.2)" 
+            }}
           >
             Interrumpir Secuencia // Esc
           </button>
 
-          {/* Barra de Progreso de Sincronización */}
-          <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/5 overflow-hidden">
+          {/* Progress bar */}
+          <div className="absolute bottom-0 left-0 right-0 h-1 overflow-hidden" style={{ background: "hsl(0 0% 100% / 0.05)" }}>
             <motion.div
-              className="h-full bg-primary shadow-[0_0_15px_#00ffc8]"
+              className="h-full"
+              style={{ background: "hsl(215 70% 55%)", boxShadow: "0 0 15px hsl(215 70% 55%)" }}
               initial={{ width: "0%" }}
               animate={{ width: "100%" }}
-              transition={{ duration: 18, ease: "linear" }}
+              transition={{ duration: 25, ease: "linear" }}
             />
           </div>
         </motion.div>

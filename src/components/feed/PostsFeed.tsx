@@ -103,24 +103,11 @@ export default function PostsFeed({
       const to = from + PAGE_SIZE - 1;
 
       // Construcción de Query Soberana
-      let query = supabase
+      const { data: postsData, error: postsError } = await supabase
         .from("posts")
-        .select(`
-          *,
-          author_profile:profiles!posts_user_id_fkey (
-            user_id, username, display_name, avatar_url, 
-            level, is_verified, federation, reputation_score
-          )
-        `)
+        .select("*")
         .order("created_at", { ascending: false })
         .range(from, to);
-
-      // Aplicar filtros de Federación TAMV (Sistema de 7)
-      if (activeFederation !== 'GLOBAL') {
-        query = query.eq('federation_context', activeFederation);
-      }
-
-      const { data: postsData, error: postsError } = await query;
 
       if (postsError) throw postsError;
 
@@ -147,10 +134,17 @@ export default function PostsFeed({
       // Transformación y Limpieza de Datos
       const transformedPosts: Post[] = postsData.map(p => ({
         ...p,
+        visibility: (p.visibility as Post['visibility']) || 'public',
         author: {
-          ...p.author_profile,
-          display_name: p.author_profile?.display_name || "Ciudadano TAMV",
-          federation: p.author_profile?.federation || "ALFA"
+          id: p.user_id,
+          username: "ciudadano",
+          display_name: "Ciudadano TAMV",
+          avatar_url: "",
+          level: 1,
+          is_verified: false,
+          federation: "ALFA" as const,
+          reputation_score: 0,
+          badges: []
         },
         is_liked: interactionData.liked.has(p.id),
         is_saved: interactionData.saved.has(p.id)
@@ -226,11 +220,11 @@ export default function PostsFeed({
       } else {
         await supabase.from("post_likes").insert({ post_id: postId, user_id: user.id });
       }
-      // RPC para métricas atómicas
-      await supabase.rpc("update_nexus_metrics", { 
+      // Increment post counter
+      await supabase.rpc("increment_post_counter", { 
         _post_id: postId, 
-        _metric: "likes", 
-        _val: wasLiked ? -1 : 1 
+        _counter_name: "likes_count", 
+        _increment: wasLiked ? -1 : 1 
       });
     } catch (e) {
       handleOptimisticAction(postId, 'like'); // Revertir

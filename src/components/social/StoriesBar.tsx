@@ -171,18 +171,7 @@ const StoriesBar = () => {
         </DialogContent>
       </Dialog>
 
-      <style jsx>{`
-        .mask-linear-fade {
-          mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
-        }
-        .scrollbar-hide::-webkit-scrollbar {
-          display: none;
-        }
-        .scrollbar-hide {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
-      `}</style>
+      {/* Scrollbar styles handled via Tailwind/global CSS */}
     </section>
   );
 };
