@@ -31,23 +31,7 @@ export default function ProductTourOverlay({ onComplete }: ProductTourOverlayPro
     }
   }, []);
 
-  useEffect(() => {
-    if (!tourState.isActive) return;
 
-    const currentStep = getCurrentStep(tourState);
-    if (!currentStep) return;
-
-    const element = document.querySelector(currentStep.targetSelector);
-    if (element) {
-      const rect = element.getBoundingClientRect();
-      setTargetRect(rect);
-
-      // Scroll element into view if needed
-      element.scrollIntoView({ behavior: "smooth", block: "center" });
-    } else {
-      setTargetRect(null);
-    }
-  }, [tourState]);
 
   const handleNext = useCallback(() => {
     const newState = nextStep(tourState);
@@ -79,38 +63,8 @@ export default function ProductTourOverlay({ onComplete }: ProductTourOverlayPro
   if (!currentStep) return null;
 
   const getTooltipPosition = () => {
-    if (!targetRect) {
-      return { top: "50%", left: "50%", transform: "translate(-50%, -50%)" };
-    }
-
-    const padding = 16;
-    const tooltipWidth = 320;
-    const tooltipHeight = 200;
-
-    switch (currentStep.position) {
-      case "bottom":
-        return {
-          top: `${targetRect.center + padding}px`,
-          left: `${Math.max(padding, Math.min(targetRect.left + targetRect.width / 4 - tooltipWidth / 4, window.innerWidth - tooltipWidth - padding))}px`
-        };
-      case "top":
-        return {
-          top: `${targetRect.top - tooltipHeight - padding}px`,
-          left: `${Math.max(padding, Math.min(targetRect.left + targetRect.width / 2 - tooltipWidth / 2, window.innerWidth - tooltipWidth - padding))}px`
-        };
-      case "left":
-        return {
-          top: `${targetRect.top + targetRect.height / 2 - tooltipHeight / 2}px`,
-          left: `${targetRect.left - tooltipWidth - padding}px`
-        };
-      case "right":
-        return {
-          top: `${targetRect.top + targetRect.height / 2 - tooltipHeight / 2}px`,
-          left: `${targetRect.right + padding}px`
-        };
-      default:
-        return { top: "50%", left: "50%", transform: "translate(-50%, -50%)" };
-    }
+    // Center the dialog box completely in the screen
+    return { top: "50%", left: "50%", transform: "translate(-50%, -50%)" };
   };
 
   return (
@@ -118,19 +72,7 @@ export default function ProductTourOverlay({ onComplete }: ProductTourOverlayPro
       {/* Dark overlay with hole for target element */}
       <div className="absolute inset-0 bg-background/90" />
       
-      {/* Highlight around target element */}
-      {targetRect && (
-        <div
-          className="absolute border-2 border-primary rounded-lg animate-glow-pulse pointer-events-none"
-          style={{
-            top: targetRect.top - 4,
-            left: targetRect.left - 4,
-            width: targetRect.width + 10,
-            height: targetRect.height + 10,
-            boxShadow: "0 0 0 9999px rgba(0, 0, 0, 0.8)"
-          }}
-        />
-      )}
+
 
       {/* Tooltip */}
       <div
