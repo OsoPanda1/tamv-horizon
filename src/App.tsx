@@ -5,6 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { ModuleLoader, LazyXRExperience, LazyDreamSpaces, LazyDevHub, LazySubastas, LazyMascotas, LazyConciertos, LazyGrupos, LazyCanales, LazyPuentesOniricos, LazyBancoTAMV, LazyExplorar, LazyTutorialsHub } from "@/lib/lazyModules";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
@@ -52,6 +53,7 @@ const App = () => (
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
+      <SpeedInsights />
     </TooltipProvider>
   </QueryClientProvider>
 );
