@@ -13,7 +13,7 @@ export const TAMV_TOUR_STEPS: ProductTourStep[] = [
     targetSelector: "#tamv-composer",
     title: "Crea contenido en segundos",
     description: "Comparte ideas, imágenes, videos y más con la comunidad TAMV. Tu voz importa.",
-    position: "center"
+    position: "top center"
   },
   {
     id: "experiences",
@@ -34,7 +34,7 @@ export const TAMV_TOUR_STEPS: ProductTourStep[] = [
     targetSelector: "#tamv-wallet",
     title: "Tu Banco TAMV",
     description: "Gestiona tus activos digitales, ganancias y realiza transacciones de forma segura.",
-    position: "center"
+    position: "top center"
   },
   {
     id: "challenges",
@@ -48,7 +48,7 @@ export const TAMV_TOUR_STEPS: ProductTourStep[] = [
     targetSelector: "#tamv-isabella",
     title: "Isabella IA",
     description: "Tu asistente creativa personal. Isabella te ayuda a crear, conectar y descubrir oportunidades.",
-    position: "top"
+    position: "top center"
   }
 ];
 
