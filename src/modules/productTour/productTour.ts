@@ -13,7 +13,7 @@ export const TAMV_TOUR_STEPS: ProductTourStep[] = [
     targetSelector: "#tamv-composer",
     title: "Crea contenido en segundos",
     description: "Comparte ideas, imágenes, videos y más con la comunidad TAMV. Tu voz importa.",
-    position: "bottom"
+    position: "center"
   },
   {
     id: "experiences",
@@ -34,7 +34,7 @@ export const TAMV_TOUR_STEPS: ProductTourStep[] = [
     targetSelector: "#tamv-wallet",
     title: "Tu Banco TAMV",
     description: "Gestiona tus activos digitales, ganancias y realiza transacciones de forma segura.",
-    position: "bottom"
+    position: "center"
   },
   {
     id: "challenges",
